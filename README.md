@@ -31,15 +31,14 @@ const $ = require('tinyspawn')
 After that, pass the command (with arguments) to execute as first argument:
 
 ```js
-const { stdout: node }  = await $('which node')
-const { stdout } = await $(`${node} -e 'console.log("hello world")'`)
+const { stdout } = await $(`node -e 'console.log("hello world")'`)
 console.log(stdout) // => 'hello world'
 ```
 
 Additionally, you can pass [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) as second argument:
 
 ```js
-const { stdout } = $(`${node} -e 'console.log("hello world")'`, {
+const { stdout } = $(`node -e 'console.log("hello world")'`, {
   shell: true
 })
 ```
@@ -84,9 +83,7 @@ const $ = require('tinyspawn').extend({ shell: true })
 **tinyspawn** is oriented to print meanigful errors:
 
 ```js
-const { stdout: node } = await $('which node')
-
-const error = await $(`${node} -e 'require("notfound")'`).catch(error => error)
+const error = await $(`node -e 'require("notfound")'`).catch(error => error)
 
 console.error(error)
 // The command spawned as:

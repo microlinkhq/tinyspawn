@@ -1,16 +1,11 @@
 'use strict'
 
+const test = require('ava')
+
 const $ = require('..').extend({ shell: true })
 
-const test = require('ava')
-const os = require('os')
-
-const isWindows = os.platform() === 'win32'
-
 test('meaningful errors', async t => {
-  const { stdout: node } = await $('which node')
-  const error = await $(`${node} -e 'require("notfound")'`).catch(error => error)
-
+  const error = await $('node -e \'require("notfound")\'').catch(error => error)
   t.is(error.name, 'ChildProcessError')
   t.is(error.stderr.includes("Cannot find module 'notfound'"), true)
   t.is(error.stdout, '')
@@ -20,24 +15,23 @@ test('meaningful errors', async t => {
 })
 
 test('run a command', async t => {
-  const { stdout } = await $('echo "hello world"')
+  const { stdout } = await $('echo hello world')
   t.is(stdout, 'hello world')
 })
 
-test('last break line is removed', async t => {
+test.serial('last break line is removed', async t => {
   {
     const { stdout } = await $('echo hello world')
-    t.is(stdout, isWindows ? '\'hello world\'' : 'hello world')
+    t.is(stdout, 'hello world')
   }
   {
-    const { stderr } = await $("echo 'hello world' >&2")
-    t.is(stderr, isWindows ? '\'hello world\'' : 'hello world')
+    const { stderr } = await $('echo hello world >&2')
+    t.is(stderr, 'hello world')
   }
 })
 
-;(isWindows ? test.skip : test)('run a file', async t => {
-  const { stdout: node } = await $('which node')
-  const { stdout } = await $(`${node} -e 'console.log("hello world")'`)
+test('run a file', async t => {
+  const { stdout } = await $('node -e \'console.log("hello world")\'')
   t.is(stdout, 'hello world')
 })
 
