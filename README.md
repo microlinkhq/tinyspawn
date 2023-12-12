@@ -64,7 +64,7 @@ const {
 
 **tinyspawn** has been designed to work with CLI commands that outputs json.
 
-You can easily parse it calling `$.json`:
+You can easily parse it calling `$.json` or passing `{ json: true }` as option:
 
 ```js
 const { stdout } = await $.json(`curl https://geolocation.microlink.io`)
