@@ -28,14 +28,14 @@ It's recommended to bind **tinyspawn** to `$`:
 const $ = require('tinyspawn')
 ```
 
-After that, pass the command (with arguments) to execute as first argument:
+After that, pass the command (with arguments) to be executed as first argument:
 
 ```js
 const { stdout } = await $(`node -e 'console.log("hello world")'`)
 console.log(stdout) // => 'hello world'
 ```
 
-Additionally, you can pass [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) as second argument:
+You can pass any [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) as second argument:
 
 ```js
 const { stdout } = $(`node -e 'console.log("hello world")'`, {
@@ -43,7 +43,7 @@ const { stdout } = $(`node -e 'console.log("hello world")'`, {
 })
 ```
 
-Any of the [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance properties are available as part of the output:
+The output is a [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance:
 
 ```js
 const {
@@ -58,6 +58,19 @@ const {
   stderr,
   stdin
 } = await $('date')
+```
+
+### Piping
+
+Since **tinyspawn** returns a [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance, you can use it for interacting with other Node.js streams:
+
+```js
+// It's a childProcess instance
+const subprocess = $('echo 1234567890')
+subprocess.stdout.pipe(process.stdout) // => 1234567890
+
+// And it's a promise too
+await subprocess
 ```
 
 ### JSON parsing
