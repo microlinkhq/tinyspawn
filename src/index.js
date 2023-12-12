@@ -6,7 +6,7 @@ const { EOL } = require('os')
 const eos = (stream, listener, buffer = []) =>
   stream[listener].on('data', data => buffer.push(data)) && buffer
 
-const clean = str => str.replace(new RegExp(`${EOL}$`), '')
+const clean = str => str.replace(new RegExp(`\\s*${EOL}$`), '')
 
 const parseStdout = (stdout, opts) => (encoding, start, end) => {
   const data = clean(stdout.toString(encoding, start, end))

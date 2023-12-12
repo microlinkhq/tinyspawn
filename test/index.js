@@ -1,11 +1,15 @@
 'use strict'
 
-const $ = require('..')
+const $ = require('..').extend({ shell: true })
+
 const test = require('ava')
+const os = require('os')
+
+const isWindows = os.platform() === 'win32'
 
 test('meaningful errors', async t => {
   const { stdout: node } = await $('which node')
-  const error = await $(`${node} -e 'require("notfound")'`, { shell: true }).catch(error => error)
+  const error = await $(`${node} -e 'require("notfound")'`).catch(error => error)
 
   t.is(error.name, 'ChildProcessError')
   t.is(error.stderr.includes("Cannot find module 'notfound'"), true)
@@ -13,37 +17,27 @@ test('meaningful errors', async t => {
   t.is(error.exitCode, 1)
   t.is(error.signalCode, null)
   t.is(error.killed, false)
-
-  // const { stdout, stderr }
-  // t.is(stdout, 'hello world')
 })
 
 test('run a command', async t => {
-  {
-    const { stdout } = await $('echo hello world', { shell: true })
-    t.is(stdout, 'hello world')
-  }
+  const { stdout } = await $('echo "hello world"')
+  t.is(stdout, 'hello world')
+})
 
+test('last break line is removed', async t => {
   {
-    const { stdout } = await $('echo "hello world"', { shell: true })
-    t.is(stdout, 'hello world')
+    const { stdout } = await $('echo hello world')
+    t.is(stdout, isWindows ? '\'hello world\'' : 'hello world')
+  }
+  {
+    const { stderr } = await $("echo 'hello world' >&2")
+    t.is(stderr, isWindows ? '\'hello world\'' : 'hello world')
   }
 })
 
-test.only('last break line is removed', async t => {
-  // {
-  //   const { stdout } = await $('echo hello world', { shell: true })
-  //   t.is(stdout, 'hello world')
-  // }
-  // {
-  const { stderr } = await $("echo 'hello world' >&2", { shell: true })
-  t.is(stderr, 'hello world')
-  // }
-})
-
-test('run a file', async t => {
+;(isWindows ? test.skip : test)('run a file', async t => {
   const { stdout: node } = await $('which node')
-  const { stdout } = await $(`${node} -e 'console.log("hello world")'`, { shell: true })
+  const { stdout } = await $(`${node} -e 'console.log("hello world")'`)
   t.is(stdout, 'hello world')
 })
 
@@ -63,6 +57,6 @@ test('output is child_process', async t => {
 })
 
 test('$.json', async t => {
-  const { stdout } = await $.json('curl https://geolocation.microlink.io')
+  const { stdout } = await require('..').json('curl https://geolocation.microlink.io')
   t.true(!!stdout.ip.address)
 })
