@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.1 (2023-12-12)
+
+
+### Bug Fixes
+
+* buffer concat ([1f048de](https://github.com/Kikobeats/tinyspawn/commit/1f048de258baa88d71f730f63d6b470212e98493))
+
 ## 1.1.0 (2023-12-12)
 
 
