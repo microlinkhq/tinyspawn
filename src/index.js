@@ -15,10 +15,12 @@ const parse = (stream, { json } = {}) => (encoding, start, end) => {
 
 const extend = defaults => (input, options) => {
   const [cmd, ...args] = input.split(' ').filter(Boolean)
+  let childProcess
 
-  return new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     const opts = { ...defaults, ...options }
-    const childProcess = spawn(cmd, args, opts)
+    childProcess = spawn(cmd, args, opts)
+
     const stdout = eos(childProcess, 'stdout')
     const stderr = eos(childProcess, 'stderr')
 
@@ -38,6 +40,8 @@ const extend = defaults => (input, options) => {
         reject(error)
       })
   })
+
+  return Object.assign(promise, childProcess)
 }
 
 const $ = extend()
