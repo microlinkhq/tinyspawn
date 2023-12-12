@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  test:
+  test-unix:
     if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
