@@ -6,7 +6,7 @@
 
 **tinyspawn** is a minimalistic `child_process` wrapper with following features:
 
-- Small (~50 lines of code).
+- Small (~50 LOC, 600 bytes).
 - Focus on performance.
 - Zero dependencies.
 - Meaningful errors.
