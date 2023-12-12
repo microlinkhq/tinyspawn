@@ -5,11 +5,11 @@ const test = require('ava')
 const $ = require('..').extend({ shell: true })
 
 test('meaningful errors', async t => {
-  const error = await $('node -e \'require("notfound")\'').catch(error => error)
+  const error = await $('node --foo').catch(error => error)
   t.is(error.name, 'ChildProcessError')
-  t.is(error.stderr.includes("Cannot find module 'notfound'"), true)
+  t.is(error.stderr, 'node: bad option: --foo')
   t.is(error.stdout, '')
-  t.is(error.exitCode, 1)
+  t.is(error.exitCode, 9)
   t.is(error.signalCode, null)
   t.is(error.killed, false)
 })
@@ -31,7 +31,7 @@ test.serial('last break line is removed', async t => {
 })
 
 test('run a file', async t => {
-  const { stdout } = await $('node -e \'console.log("hello world")\'')
+  const { stdout } = await $('node -p "\'hello world\'"')
   t.is(stdout, 'hello world')
 })
 
