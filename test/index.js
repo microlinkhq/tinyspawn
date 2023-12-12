@@ -20,7 +20,7 @@ test('meaningful errors', async t => {
 
 test('run a command', async t => {
   {
-    const { stdout } = await $('echo hello world')
+    const { stdout } = await $('echo hello world', { shell: true })
     t.is(stdout, 'hello world')
   }
 
@@ -32,7 +32,7 @@ test('run a command', async t => {
 
 test('last break line is removed', async t => {
   {
-    const { stdout } = await $('echo hello world')
+    const { stdout } = await $('echo hello world', { shell: true })
     t.is(stdout, 'hello world')
   }
   {
