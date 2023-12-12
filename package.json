@@ -1,9 +1,9 @@
 {
   "name": "tinyspawn",
   "description": "tinyspawn is a minimalistic wrapper around child_process",
-  "homepage": "https://github.com/kikobeats/tinyspawn",
-  "main": "src/index.js",
+  "homepage": "https://github.com/Kikobeats/tinyspawn",
   "version": "0.0.0",
+  "main": "src/index.js",
   "author": {
     "name": "Kiko Beats",
     "email": "josefrancisco.verdu@gmail.com",
@@ -11,13 +11,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kikobeats/tinyspawn.git"
+    "url": "git+https://github.com/Kikobeats/tinyspawn.git"
   },
   "bugs": {
-    "url": "https://github.com/kikobeats/tinyspawn/issues"
+    "url": "https://github.com/Kikobeats/tinyspawn/issues"
   },
-  "keywords": [],
-  "dependencies": {},
+  "keywords": [
+    "bin",
+    "binaries",
+    "binary",
+    "child",
+    "exec",
+    "execfile",
+    "execute",
+    "file",
+    "fork",
+    "process",
+    "shell",
+    "spawn",
+    "zx"
+  ],
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
@@ -38,6 +51,9 @@
   "engines": {
     "node": ">= 18"
   },
+  "files": [
+    "src"
+  ],
   "scripts": {
     "clean": "rm -rf node_modules",
     "contributors": "(npx git-authors-cli && npx finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
@@ -58,9 +74,6 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "exports": {
-    ".": "./src/index.js"
   },
   "nano-staged": {
     "*.js": [
