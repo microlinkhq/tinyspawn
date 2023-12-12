@@ -1,7 +1,7 @@
 # tinyspawn
 
-![Last version](https://img.shields.io/github/tag/kikobeats/tinyspawn.svg?style=flat-square)
-[![Coverage Status](https://img.shields.io/coveralls/kikobeats/tinyspawn.svg?style=flat-square)](https://coveralls.io/github/kikobeats/tinyspawn)
+![Last version](https://img.shields.io/github/tag/Kikobeats/tinyspawn.svg?style=flat-square)
+[![Coverage Status](https://img.shields.io/coveralls/Kikobeats/tinyspawn.svg?style=flat-square)](https://coveralls.io/github/Kikobeats/tinyspawn)
 [![NPM Status](https://img.shields.io/npm/dm/tinyspawn.svg?style=flat-square)](https://www.npmjs.org/package/tinyspawn)
 
 **tinyspawn** is a minimalistic `child_process` wrapper with following features:
