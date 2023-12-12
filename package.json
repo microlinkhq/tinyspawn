@@ -24,6 +24,7 @@
     "@ksmithut/prettier-standard": "latest",
     "ava": "latest",
     "c8": "latest",
+    "ci-publish": "latest",
     "conventional-github-releaser": "latest",
     "finepack": "latest",
     "git-authors-cli": "latest",
@@ -31,6 +32,7 @@
     "npm-check-updates": "latest",
     "simple-git-hooks": "latest",
     "standard": "latest",
+    "standard-markdown": "latest",
     "standard-version": "latest"
   },
   "engines": {
@@ -41,7 +43,7 @@
     "contributors": "(npx git-authors-cli && npx finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
     "coverage": "c8 report --reporter=text-lcov > coverage/lcov.info",
     "lint": "standard",
-    "postrelease": "npm run release:tags && npm run release:github && npm publish",
+    "postrelease": "npm run release:tags && npm run release:github && (ci-publish || npm publish --access=public)",
     "prerelease": "npm run update:check",
     "pretest": "npm run lint",
     "release": "standard-version -a",
