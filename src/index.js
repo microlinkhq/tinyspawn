@@ -3,13 +3,17 @@
 const { spawn } = require('child_process')
 const { EOL } = require('os')
 
-const eos = (stream, listener, buffer = []) =>
-  stream[listener].on('data', data => buffer.push(data)) && buffer
+const eos = (stream, listener, buffer = []) => {
+  stream[listener].on('data', data => {
+    buffer.push(data)
+  })
+  return buffer
+}
 
 const clean = str => str.trim().replace(/\n$/, '')
 
-const parse = (stream, { json } = {}) => (encoding, start, end) => {
-  const data = clean(stream.toString(encoding, start, end))
+const parse = (buffer, { json } = {}) => (encoding, start, end) => {
+  const data = clean(Buffer.concat(buffer).toString(encoding, start, end))
   return json ? JSON.parse(data) : data
 }
 
