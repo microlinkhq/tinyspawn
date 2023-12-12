@@ -3,12 +3,7 @@
 const { spawn } = require('child_process')
 const { EOL } = require('os')
 
-const eos = (stream, listener, buffer = []) => {
-  stream[listener].on('data', data => {
-    buffer.push(data)
-  })
-  return buffer
-}
+const eos = (stream, listener, buffer = []) => stream[listener].on('data', data => buffer.push(data)) && buffer
 
 const clean = str => str.trim().replace(/\n$/, '')
 
