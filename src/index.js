@@ -31,7 +31,7 @@ const extend = defaults => (input, options) => {
         if (code === 0) return resolve(childProcess)
         let command = `The command spawned as:${EOL}${EOL}`
         command += `  ${cmd} ${args.join(' ')}${EOL}${EOL}`
-        command += `failed with code ${code}:${EOL}${EOL}`
+        command += `exited with \`{ code: ${code} }\` and the following trace:${EOL}${EOL}`
         command += String(stderr).split(EOL).map(line => `  ${line}`).join(EOL)
         const error = new Error(command)
         error.name = 'ChildProcessError'

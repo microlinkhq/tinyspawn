@@ -4,7 +4,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/Kikobeats/tinyspawn.svg?style=flat-square)](https://coveralls.io/github/Kikobeats/tinyspawn)
 [![NPM Status](https://img.shields.io/npm/dm/tinyspawn.svg?style=flat-square)](https://www.npmjs.org/package/tinyspawn)
 
-**tinyspawn** is a minimalistic `child_process` wrapper with following features:
+**tinyspawn** is a minimalistic [child_process](https://nodejs.org/api/child_process.html) wrapper with following features:
 
 - Small (~50 LOC, 600 bytes).
 - Focus on performance.
@@ -20,22 +20,24 @@ $ npm install tinyspawn --save
 
 ## Usage
 
-### Basic
+### Getting started
 
-It's recommended to bind **tinyspawn** to `$`:
+The [child_process](https://nodejs.org/api/child_process.html) in Node.js is great, but I always found the API confusing and hard to remember.
+
+That's why I created **tinyspawn**. It's recommended to bind it to `$`:
 
 ```js
 const $ = require('tinyspawn')
 ```
 
-After that, pass the command (with arguments) to be executed as first argument:
+The first argument is the command (with arguments) to be executed:
 
 ```js
 const { stdout } = await $(`node -e 'console.log("hello world")'`)
 console.log(stdout) // => 'hello world'
 ```
 
-You can pass any [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) as second argument:
+The second argument is any of the [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options):
 
 ```js
 const { stdout } = $(`node -e 'console.log("hello world")'`, {
@@ -43,7 +45,7 @@ const { stdout } = $(`node -e 'console.log("hello world")'`, {
 })
 ```
 
-The output is a [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance:
+When you execute a command, it returns a [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance:
 
 ```js
 const {
@@ -60,55 +62,63 @@ const {
 } = await $('date')
 ```
 
-### Piping
+### Piping streams
 
 Since **tinyspawn** returns a [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance, you can use it for interacting with other Node.js streams:
 
 ```js
-// It's a childProcess instance
 const subprocess = $('echo 1234567890')
 subprocess.stdout.pipe(process.stdout) // => 1234567890
 
-// And it's a promise too
-await subprocess
+/* You can also continue interacting with it as a promise */
+
+const { stdout } = await subprocess
+console.log(stdout) // => 1234567890
 ```
 
 ### JSON parsing
 
-**tinyspawn** has been designed to work with CLI commands that outputs json.
+A CLI program commonly supports a way to return a JSON that makes it easy to connect with other programs.
 
-You can easily parse it calling `$.json` or passing `{ json: true }` as option:
+**tinyspawn** has been designed to be easy to work with CLI programs, making it possible to call `$.json` or pass `{ json: true }` as an option:
 
 ```js
 const { stdout } = await $.json(`curl https://geolocation.microlink.io`)
 ```
 
-### Extending
+### Extending behavior
 
-You can use `$.extend` to pass any [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) to be used by default:
+Although you can pass [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) as a second argument, sometimes defining something as default behavior is convenient.
+
+**tinyspawn** exports the method `$.extend` to create a tinyspawn with [spawn#options](https://nodejs.org/api/child_process.html#child_processspawncommand-args-options) defaults set:
 
 ```js
-const $ = require('tinyspawn').extend({ shell: true })
+const $ = require('tinyspawn').extend({
+  timeout: 5000
+  killSignal: 'SIGKILL'
+})
 ```
 
-### Errors
+### Meaningful errors
 
-**tinyspawn** is oriented to print meanigful errors:
+When working with CLI programs and something wrong happens, it's crucial to present the error as readable as possible.
+
+**tinyspawn** prints meaningful errors to help you understa dn what happened:
 
 ```js
 const error = await $(`node -e 'require("notfound")'`).catch(error => error)
 
 console.error(error)
 // The command spawned as:
-
+//
 //   /Users/kikobeats/.n/bin/node -e 'require("notfound")'
-
-// failed with code 1:
-
+//
+// exited with `{ code: 1 }` and the following trace:
+//
 //   node:internal/modules/cjs/loader:1147
 //     throw err;
 //     ^
-
+//
 //   Error: Cannot find module 'notfound'
 //   Require stack:
 //   - /Users/kikobeats/Downloads/tinyspawn/[eval]
@@ -129,7 +139,7 @@ console.error(error)
 //   Node.js v20.10.0
 ```
 
-The childProcess properties are also available as part of the error:
+The [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance properties are also available as part of the error:
 
 ```js
 const { stdout: node } = await $('which node')
