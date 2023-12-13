@@ -63,7 +63,7 @@ test('piping subprocess', async t => {
       this.buffer = []
       callback()
     },
-    write (chunk, encoding, callback) {
+    write (chunk, _, callback) {
       this.buffer.push(chunk)
       callback()
     }
@@ -74,4 +74,10 @@ test('piping subprocess', async t => {
   await subprocess
 
   t.is(stream.buffer.toString(), `1234567890${EOL}`)
+})
+
+test('passing timeout', async t => {
+  const result = await $('sleep 3 && echo OK', { timeout: 1, killSignal: 'SIGKILL' }).catch(err => err)
+  t.is(result.killed, true)
+  t.is(result.signalCode, 'SIGKILL')
 })
