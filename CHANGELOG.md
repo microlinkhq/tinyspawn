@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.1 (2023-12-14)
+
+
+### Bug Fixes
+
+* filter at end ([077bb35](https://github.com/Kikobeats/tinyspawn/commit/077bb355006b787afc57cc58e6a0b08f61513530))
+
 ## 1.2.0 (2023-12-14)
 
 
