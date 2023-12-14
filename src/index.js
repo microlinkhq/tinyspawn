@@ -42,7 +42,7 @@ const extend = defaults => (input, args, options) => {
       })
   })
 
-  return Object.assign(promise, childProcess)
+  return Object.assign(promise, childProcess, { once: childProcess.once.bind(childProcess) })
 }
 
 const $ = extend()

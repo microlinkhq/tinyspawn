@@ -108,3 +108,11 @@ test('passing timeout', async t => {
   t.is(result.killed, true)
   t.is(result.signalCode, 'SIGKILL')
 })
+
+test('.once event is emitted', async t => {
+  const subprocess = $('echo 1234567890')
+  await new Promise(resolve => subprocess.once('spawn', resolve))
+  const result = await subprocess
+  t.is(result.stdout, '1234567890')
+  t.is(result.exitCode, 0)
+})
