@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.2 (2023-12-14)
+
+
+### Bug Fixes
+
+* expose once listener ([e787839](https://github.com/Kikobeats/tinyspawn/commit/e787839ea5f66e01c1834f7a4ce48e42ff512001))
+
 ### 1.2.1 (2023-12-14)
 
 
