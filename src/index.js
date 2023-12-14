@@ -19,7 +19,6 @@ const extend = defaults => (input, options) => {
   const promise = new Promise((resolve, reject) => {
     const opts = { ...defaults, ...options }
     childProcess = spawn(cmd, args, opts)
-
     const stdout = eos(childProcess, 'stdout')
     const stderr = eos(childProcess, 'stderr')
 
@@ -29,11 +28,13 @@ const extend = defaults => (input, options) => {
         Object.defineProperty(childProcess, 'stdout', { get: parse(stdout, opts) })
         Object.defineProperty(childProcess, 'stderr', { get: parse(stderr) })
         if (code === 0) return resolve(childProcess)
-        let command = `The command spawned as:${EOL}${EOL}`
-        command += `  ${cmd} ${args.join(' ')}${EOL}${EOL}`
-        command += `exited with \`{ code: ${code} }\` and the following trace:${EOL}${EOL}`
-        command += String(stderr).split(EOL).map(line => `  ${line}`).join(EOL)
-        const error = new Error(command)
+        const command = `${cmd} ${args.join(' ')}`
+        let message = `The command spawned as:${EOL}${EOL}`
+        message += `  ${command}${EOL}${EOL}`
+        message += `exited with \`{ code: ${code} }\` and the following trace:${EOL}${EOL}`
+        message += String(stderr).split(EOL).map(line => `  ${line}`).join(EOL)
+        const error = new Error(message)
+        error.command = command
         error.name = 'ChildProcessError'
         Object.keys(childProcess).forEach(key => { error[key] = childProcess[key] })
         reject(error)
