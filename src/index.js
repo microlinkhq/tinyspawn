@@ -14,7 +14,7 @@ const parse = (buffer, { json } = {}) => (encoding, start, end) => {
 
 const extend = defaults => (input, args, options) => {
   if (!(args instanceof Array)) { options = args; args = [] }
-  const [cmd, ...cmdArgs] = input.split(' ').filter(Boolean).concat(args)
+  const [cmd, ...cmdArgs] = input.split(' ').concat(args).filter(Boolean)
   let childProcess
 
   const promise = new Promise((resolve, reject) => {
