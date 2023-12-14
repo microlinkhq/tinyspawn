@@ -1,10 +1,15 @@
 'use strict'
 
+const { execSync } = require('child_process')
 const { Writable } = require('stream')
 const { EOL } = require('os')
 const test = require('ava')
 
-const $ = require('..').extend({ shell: true })
+const isWindows = require('os').platform() === 'win32'
+
+const SHELL = isWindows ? 'cmd.exe' : execSync('which sh').toString().trim()
+
+const $ = require('..').extend({ shell: SHELL })
 
 test('meaningful errors', async t => {
   const error = await $('node --foo').catch(error => error)
@@ -16,9 +21,31 @@ test('meaningful errors', async t => {
   t.is(error.killed, false)
 })
 
-test('run a command', async t => {
-  const { stdout } = await $('echo hello world')
-  t.is(stdout, 'hello world')
+test.serial('run a command', async t => {
+  {
+    const result = await $('echo hello world')
+    t.is(result.stdout, 'hello world')
+    t.is(result.spawnfile, SHELL)
+    t.deepEqual(result.spawnargs, isWindows ? [SHELL, '/d', '/s', '/c', '"echo hello world"'] : [SHELL, '-c', 'echo hello world'])
+  }
+  {
+    const result = await $('echo $0', { argv0: 'hello world' })
+    t.is(result.stdout, isWindows ? '$0' : 'hello world')
+    t.is(result.spawnfile, SHELL)
+    t.deepEqual(result.spawnargs, isWindows ? ['hello world', '/d', '/s', '/c', '"echo $0"'] : ['hello world', '-c', 'echo $0'])
+  }
+  {
+    const result = await $('echo', ['hello world'])
+    t.is(result.stdout, 'hello world')
+    t.is(result.spawnfile, SHELL)
+    t.deepEqual(result.spawnargs, isWindows ? [SHELL, '/d', '/s', '/c', '"echo hello world"'] : [SHELL, '-c', 'echo hello world'])
+  }
+  {
+    const result = await $('echo', ['hello $0'], { argv0: 'world' })
+    t.is(result.stdout, isWindows ? 'hello $0' : 'hello world')
+    t.is(result.spawnfile, SHELL)
+    t.deepEqual(result.spawnargs, isWindows ? ['world', '/d', '/s', '/c', '"echo hello $0"'] : ['world', '-c', 'echo hello $0'])
+  }
 })
 
 test.serial('last break line is removed', async t => {

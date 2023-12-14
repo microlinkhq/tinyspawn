@@ -12,13 +12,14 @@ const parse = (buffer, { json } = {}) => (encoding, start, end) => {
   return json ? JSON.parse(data) : data
 }
 
-const extend = defaults => (input, options) => {
-  const [cmd, ...args] = input.split(' ').filter(Boolean)
+const extend = defaults => (input, args, options) => {
+  if (!(args instanceof Array)) { options = args; args = [] }
+  const [cmd, ...cmdArgs] = input.split(' ').filter(Boolean).concat(args)
   let childProcess
 
   const promise = new Promise((resolve, reject) => {
     const opts = { ...defaults, ...options }
-    childProcess = spawn(cmd, args, opts)
+    childProcess = spawn(cmd, cmdArgs, opts)
     const stdout = eos(childProcess, 'stdout')
     const stderr = eos(childProcess, 'stderr')
 
@@ -28,7 +29,7 @@ const extend = defaults => (input, options) => {
         Object.defineProperty(childProcess, 'stdout', { get: parse(stdout, opts) })
         Object.defineProperty(childProcess, 'stderr', { get: parse(stderr) })
         if (code === 0) return resolve(childProcess)
-        const command = `${cmd} ${args.join(' ')}`
+        const command = `${cmd} ${cmdArgs.join(' ')}`
         let message = `The command spawned as:${EOL}${EOL}`
         message += `  ${command}${EOL}${EOL}`
         message += `exited with \`{ code: ${code} }\` and the following trace:${EOL}${EOL}`
