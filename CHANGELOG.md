@@ -7,21 +7,21 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* expose once listener ([e787839](https://github.com/Kikobeats/tinyspawn/commit/e787839ea5f66e01c1834f7a4ce48e42ff512001))
+* expose once listener ([e787839](https://github.com/microlinkhq/tinyspawn/commit/e787839ea5f66e01c1834f7a4ce48e42ff512001))
 
 ### 1.2.1 (2023-12-14)
 
 
 ### Bug Fixes
 
-* filter at end ([077bb35](https://github.com/Kikobeats/tinyspawn/commit/077bb355006b787afc57cc58e6a0b08f61513530))
+* filter at end ([077bb35](https://github.com/microlinkhq/tinyspawn/commit/077bb355006b787afc57cc58e6a0b08f61513530))
 
 ## 1.2.0 (2023-12-14)
 
 
 ### Features
 
-* support conditional array argument ([10a1e9b](https://github.com/Kikobeats/tinyspawn/commit/10a1e9baa9757a66dbae197e62e8f17234163fa0))
+* support conditional array argument ([10a1e9b](https://github.com/microlinkhq/tinyspawn/commit/10a1e9baa9757a66dbae197e62e8f17234163fa0))
 
 ### 1.1.5 (2023-12-14)
 
@@ -36,16 +36,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* buffer concat ([1f048de](https://github.com/Kikobeats/tinyspawn/commit/1f048de258baa88d71f730f63d6b470212e98493))
+* buffer concat ([1f048de](https://github.com/microlinkhq/tinyspawn/commit/1f048de258baa88d71f730f63d6b470212e98493))
 
 ## 1.1.0 (2023-12-12)
 
 
 ### Features
 
-* add piping support ([b90416a](https://github.com/Kikobeats/tinyspawn/commit/b90416acbfa6300477a127b5b0d6d4d37235af4b))
+* add piping support ([b90416a](https://github.com/microlinkhq/tinyspawn/commit/b90416acbfa6300477a127b5b0d6d4d37235af4b))
 
-## [1.0.0](https://github.com/Kikobeats/tinyspawn/compare/v0.0.2...v1.0.0) (2023-12-12)
+## [1.0.0](https://github.com/microlinkhq/tinyspawn/compare/v0.0.2...v1.0.0) (2023-12-12)
 
 ### 0.0.2 (2023-12-12)
 

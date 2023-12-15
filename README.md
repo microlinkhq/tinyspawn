@@ -1,7 +1,12 @@
-# tinyspawn
+<div align="center">
+  <img src="https://github.com/microlinkhq/cdn/raw/master/dist/logo/banner.png#gh-light-mode-only" alt="microlink cdn">
+  <img src="https://github.com/microlinkhq/cdn/raw/master/dist/logo/banner-dark.png#gh-dark-mode-only" alt="microlink cdn">
+  <br>
+  <br>
+</div>
 
-![Last version](https://img.shields.io/github/tag/Kikobeats/tinyspawn.svg?style=flat-square)
-[![Coverage Status](https://img.shields.io/coveralls/Kikobeats/tinyspawn.svg?style=flat-square)](https://coveralls.io/github/Kikobeats/tinyspawn)
+![Last version](https://img.shields.io/github/tag/microlinkhq.svg?style=flat-square)
+[![Coverage Status](https://img.shields.io/coveralls/microlinkhq.svg?style=flat-square)](https://coveralls.io/github/microlinkhq)
 [![NPM Status](https://img.shields.io/npm/dm/tinyspawn.svg?style=flat-square)](https://www.npmjs.org/package/tinyspawn)
 
 **tinyspawn** is a minimalistic [child_process](https://nodejs.org/api/child_process.html) wrapper with following features:
@@ -162,7 +167,9 @@ const {
 
 ## License
 
-**tinyspawn** © [Kiko Beats](https://kikobeats.com), released under the [MIT](https://github.com/kikobeats/tinyspawn/blob/master/LICENSE.md) License.<br>
-Authored and maintained by [Kiko Beats](https://kikobeats.com) with help from [contributors](https://github.com/kikobeats/tinyspawn/contributors).
+## License
 
-> [kikobeats.com](https://kikobeats.com) · GitHub [Kiko Beats](https://github.com/kikobeats) · Twitter [@kikobeats](https://twitter.com/kikobeats)
+**tinyspawn** © [microlink.io](https://microlink.io), released under the [MIT](https://github.com/microlinkhq/tinyspawn/blob/master/LICENSE.md) License.<br>
+Authored and maintained by [Kiko Beats](https://kikobeats.com) with help from [contributors](https://github.com/microlinkhq/tinyspawn/contributors).
+
+> [microlink.io](https://microlink.io) · GitHub [microlink.io](https://github.com/microlinkhq) · Twitter [@microlinkhq](https://twitter.com/microlinkhq)
