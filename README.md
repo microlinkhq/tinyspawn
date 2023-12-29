@@ -5,8 +5,8 @@
   <br>
 </div>
 
-![Last version](https://img.shields.io/github/tag/microlinkhq.svg?style=flat-square)
-[![Coverage Status](https://img.shields.io/coveralls/microlinkhq.svg?style=flat-square)](https://coveralls.io/github/microlinkhq)
+![Last version](https://img.shields.io/github/tag/microlinkhq/tinyspawn.svg?style=flat-square)
+[![Coverage Status](https://img.shields.io/coveralls/microlinkhq/tinyspawn.svg?style=flat-square)](https://coveralls.io/github/coveralls/microlinkhq/tinyspawn)
 [![NPM Status](https://img.shields.io/npm/dm/tinyspawn.svg?style=flat-square)](https://www.npmjs.org/package/tinyspawn)
 
 **tinyspawn** is a minimalistic [child_process](https://nodejs.org/api/child_process.html) wrapper with following features:
