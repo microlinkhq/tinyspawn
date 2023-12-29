@@ -109,10 +109,21 @@ test('passing timeout', async t => {
   t.is(result.signalCode, 'SIGKILL')
 })
 
-test('.once event is emitted', async t => {
+test('event emitter properties are availables', async t => {
   const subprocess = $('echo 1234567890')
   await new Promise(resolve => subprocess.once('spawn', resolve))
   const result = await subprocess
   t.is(result.stdout, '1234567890')
   t.is(result.exitCode, 0)
+
+  ;[
+    'constructor', 'setMaxListeners',
+    'getMaxListeners', 'emit',
+    'addListener', 'on',
+    'prependListener', 'once',
+    'prependOnceListener', 'removeListener',
+    'off', 'removeAllListeners',
+    'listeners', 'rawListeners',
+    'listenerCount', 'eventNames'
+  ].forEach(name => t.truthy(subprocess[name]))
 })
