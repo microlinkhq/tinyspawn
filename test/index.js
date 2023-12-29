@@ -26,25 +26,45 @@ test.serial('run a command', async t => {
     const result = await $('echo hello world')
     t.is(result.stdout, 'hello world')
     t.is(result.spawnfile, SHELL)
-    t.deepEqual(result.spawnargs, isWindows ? [SHELL, '/d', '/s', '/c', '"echo hello world"'] : [SHELL, '-c', 'echo hello world'])
+    t.deepEqual(
+      result.spawnargs,
+      isWindows
+        ? [SHELL, '/d', '/s', '/c', '"echo hello world"']
+        : [SHELL, '-c', 'echo hello world']
+    )
   }
   {
     const result = await $('echo $0', { argv0: 'hello world' })
     t.is(result.stdout, isWindows ? '$0' : 'hello world')
     t.is(result.spawnfile, SHELL)
-    t.deepEqual(result.spawnargs, isWindows ? ['hello world', '/d', '/s', '/c', '"echo $0"'] : ['hello world', '-c', 'echo $0'])
+    t.deepEqual(
+      result.spawnargs,
+      isWindows
+        ? ['hello world', '/d', '/s', '/c', '"echo $0"']
+        : ['hello world', '-c', 'echo $0']
+    )
   }
   {
     const result = await $('echo', ['hello world'])
     t.is(result.stdout, 'hello world')
     t.is(result.spawnfile, SHELL)
-    t.deepEqual(result.spawnargs, isWindows ? [SHELL, '/d', '/s', '/c', '"echo hello world"'] : [SHELL, '-c', 'echo hello world'])
+    t.deepEqual(
+      result.spawnargs,
+      isWindows
+        ? [SHELL, '/d', '/s', '/c', '"echo hello world"']
+        : [SHELL, '-c', 'echo hello world']
+    )
   }
   {
     const result = await $('echo', ['hello $0'], { argv0: 'world' })
     t.is(result.stdout, isWindows ? 'hello $0' : 'hello world')
     t.is(result.spawnfile, SHELL)
-    t.deepEqual(result.spawnargs, isWindows ? ['world', '/d', '/s', '/c', '"echo hello $0"'] : ['world', '-c', 'echo hello $0'])
+    t.deepEqual(
+      result.spawnargs,
+      isWindows
+        ? ['world', '/d', '/s', '/c', '"echo hello $0"']
+        : ['world', '-c', 'echo hello $0']
+    )
   }
 })
 
@@ -80,7 +100,9 @@ test('output is child_process', async t => {
 })
 
 test('$.json', async t => {
-  const { stdout } = await require('..').json('curl https://geolocation.microlink.io')
+  const { stdout } = await require('..').json(
+    'curl https://geolocation.microlink.io'
+  )
   t.true(!!stdout.ip.address)
 })
 
@@ -104,7 +126,10 @@ test('piping subprocess', async t => {
 })
 
 test('passing timeout', async t => {
-  const result = await $('sleep 3 && echo OK', { timeout: 1, killSignal: 'SIGKILL' }).catch(err => err)
+  const result = await $('sleep 3 && echo OK', {
+    timeout: 1,
+    killSignal: 'SIGKILL'
+  }).catch(err => err)
   t.is(result.killed, true)
   t.is(result.signalCode, 'SIGKILL')
 })
@@ -115,15 +140,22 @@ test('event emitter properties are availables', async t => {
   const result = await subprocess
   t.is(result.stdout, '1234567890')
   t.is(result.exitCode, 0)
-
   ;[
-    'constructor', 'setMaxListeners',
-    'getMaxListeners', 'emit',
-    'addListener', 'on',
-    'prependListener', 'once',
-    'prependOnceListener', 'removeListener',
-    'off', 'removeAllListeners',
-    'listeners', 'rawListeners',
-    'listenerCount', 'eventNames'
+    'constructor',
+    'setMaxListeners',
+    'getMaxListeners',
+    'emit',
+    'addListener',
+    'on',
+    'prependListener',
+    'once',
+    'prependOnceListener',
+    'removeListener',
+    'off',
+    'removeAllListeners',
+    'listeners',
+    'rawListeners',
+    'listenerCount',
+    'eventNames'
   ].forEach(name => t.truthy(subprocess[name]))
 })

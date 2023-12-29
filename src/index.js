@@ -3,7 +3,7 @@
 const { spawn } = require('child_process')
 const { EOL } = require('os')
 
-const EVENT_EMITTER_PROPS = Object.getOwnPropertyNames(require('events').EventEmitter.prototype).filter(name => !name.startsWith('_'))
+const EE_PROPS = Object.getOwnPropertyNames(require('events').EventEmitter.prototype).filter(name => !name.startsWith('_'))
 
 const eos = (stream, listener, buffer = []) => stream[listener].on('data', data => buffer.push(data)) && buffer
 
@@ -45,7 +45,7 @@ const extend = defaults => (input, args, options) => {
   })
 
   const subprocess = Object.assign(promise, childProcess)
-  EVENT_EMITTER_PROPS.forEach(name => (subprocess[name] = childProcess[name].bind(childProcess)))
+  if (childProcess) EE_PROPS.forEach(name => (subprocess[name] = childProcess[name].bind(childProcess)))
   return subprocess
 }
 
