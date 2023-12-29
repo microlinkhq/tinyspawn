@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.3 (2023-12-29)
+
+
+### Bug Fixes
+
+* expose event emitter properties ([d3bb152](https://github.com/microlinkhq/tinyspawn/commit/d3bb15201fc073e60930de348bd05a56423d2f6b))
+
 ### 1.2.2 (2023-12-14)
 
 
