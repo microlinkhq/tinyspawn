@@ -2,7 +2,7 @@
   "name": "tinyspawn",
   "description": "tinyspawn is a minimalistic wrapper around child_process",
   "homepage": "https://github.com/microlinkhq/tinyspawn",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "main": "src/index.js",
   "author": {
     "email": "hello@microlink.io",

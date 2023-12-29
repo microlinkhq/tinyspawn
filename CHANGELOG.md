@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.4 (2023-12-29)
+
+
+### Bug Fixes
+
+* check childProcess was created ([8761380](https://github.com/microlinkhq/tinyspawn/commit/8761380b5b133ba6e82fa6b07bdaa31269f906ea))
+
 ### 1.2.3 (2023-12-29)
 
 
