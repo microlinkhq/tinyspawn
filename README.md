@@ -99,7 +99,7 @@ Although you can pass [spawn#options](https://nodejs.org/api/child_process.html#
 
 ```js
 const $ = require('tinyspawn').extend({
-  timeout: 5000
+  timeout: 5000,
   killSignal: 'SIGKILL'
 })
 ```
