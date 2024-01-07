@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{fromJson(env.NODE_VERSION)}}
+        node-version: ${{fromJson(env.NODE_VERSIONS)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: ${{fromJson(env.NODE_VERSION)}}
+        node-version: ${{fromJson(env.NODE_VERSIONS)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
