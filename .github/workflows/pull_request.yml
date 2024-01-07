@@ -12,6 +12,9 @@ jobs:
   test-unix:
     if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['16', '18', 'lts/*', 'latest']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
@@ -38,6 +41,9 @@ jobs:
   test-win:
     if: github.ref != 'refs/heads/master'
     runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: ['16', '18', 'lts/*', 'latest']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +52,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
