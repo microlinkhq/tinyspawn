@@ -8,14 +8,13 @@ on:
     branches:
       - master
       
-strategy:
-  matrix:
-    node-version: ['14.x', '16.x', '18.x', 'lts/*', 'latest']
-
 jobs:
   test-unix:
     if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['14.x', '16.x', '18.x', 'lts/*', 'latest']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
