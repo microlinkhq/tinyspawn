@@ -8,16 +8,13 @@ on:
     branches:
       - master
 
-env:
-  NODE_VERSIONS: '["16","18","lts/*","latest"]'
-
 jobs:
   test-unix:
     if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(env.NODE_VERSIONS) }}
+        node-version: ['14', '16', '18', 'lts/*', 'latest']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +43,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(env.NODE_VERSIONS) }}
+        node-version: ['14', '16', '18', 'lts/*', 'latest']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
