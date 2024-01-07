@@ -167,8 +167,6 @@ const {
 
 ## License
 
-## License
-
 **tinyspawn** © [microlink.io](https://microlink.io), released under the [MIT](https://github.com/microlinkhq/tinyspawn/blob/master/LICENSE.md) License.<br>
 Authored and maintained by [Kiko Beats](https://kikobeats.com) with help from [contributors](https://github.com/microlinkhq/tinyspawn/contributors).
 
