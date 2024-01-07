@@ -7,6 +7,10 @@ on:
   pull_request:
     branches:
       - master
+      
+strategy:
+  matrix:
+    node-version: ['14.x', '16.x', '18.x', 'lts/*', 'latest']
 
 jobs:
   test-unix:
@@ -20,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
