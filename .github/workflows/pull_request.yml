@@ -9,7 +9,7 @@ on:
       - master
 
 env:
-  NODE_VERSIONS: "['16', '18', 'lts/*', 'latest']"
+  NODE_VERSIONS: '["16","18","lts/*","latest"]'
 
 jobs:
   test-unix:
