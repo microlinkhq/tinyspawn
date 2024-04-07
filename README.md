@@ -81,6 +81,18 @@ const { stdout } = await subprocess
 console.log(stdout) // => 1234567890
 ```
 
+or stdin:
+
+```js
+const { Readable } = require('node:stream')
+
+const subprocess = $('cat', { stdin: 'hello world' })
+Readable.from('hello world').pipe(subprocess.stdin)
+const {stdout} = await subprocess
+
+console.log(stdout) // 'hello world'
+```
+
 ### JSON parsing
 
 A CLI program commonly supports a way to return a JSON that makes it easy to connect with other programs.
