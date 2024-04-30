@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.2.9 (2024-04-30)
+
+
+### Bug Fixes
+
+* expose kill, ref & unref methods ([#11](https://github.com/microlinkhq/tinyspawn/issues/11)) ([ac424c0](https://github.com/microlinkhq/tinyspawn/commit/ac424c090f0c81cef4ed1f519821eddf3e33ab6a)), closes [#10](https://github.com/microlinkhq/tinyspawn/issues/10)
+
 ### 1.2.8 (2024-04-30)
 
 ### 1.2.7 (2024-02-09)
