@@ -32,7 +32,7 @@ jobs:
       - name: Test
         run: pnpm test
       - name: Report
-        run: npx c8 report --reporter=text-lcov > coverage/lcov.info
+        run: ./node_modules/.bin/c8 report --reporter=text-lcov > coverage/lcov.info
       - name: Coverage
         uses: coverallsapp/github-action@main
         with:
@@ -61,7 +61,7 @@ jobs:
       - name: Test
         run: pnpm test
       - name: Report
-        run: npx c8 report --reporter=text-lcov > coverage/lcov.info
+        run: ./node_modules/.bin/c8 report --reporter=text-lcov > coverage/lcov.info
       - name: Coverage
         uses: coverallsapp/github-action@main
         with:
