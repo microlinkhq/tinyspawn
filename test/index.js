@@ -127,6 +127,7 @@ test('piping subprocess', async t => {
 
 test('passing timeout', async t => {
   const result = await $('sleep 3 && echo OK', {
+    shell: true,
     timeout: 1,
     killSignal: 'SIGKILL'
   }).catch(err => err)
@@ -158,4 +159,13 @@ test('event emitter properties are availables', async t => {
     'listenerCount',
     'eventNames'
   ].forEach(name => t.truthy(subprocess[name]))
+})
+
+test('child process properties are available', async t => {
+  const subprocess = $('echo 1234567890')
+  await new Promise(resolve => subprocess.once('spawn', resolve))
+  const result = await subprocess
+  t.is(result.stdout, '1234567890')
+  t.is(result.exitCode, 0)
+  ;['kill', 'ref', 'unref'].forEach(name => t.truthy(subprocess[name]))
 })
