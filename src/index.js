@@ -10,7 +10,9 @@ const EE_PROPS = Object.getOwnPropertyNames(
   .concat(['kill', 'ref', 'unref'])
 
 const eos = (stream, listener, buffer = []) =>
-  stream[listener].on('data', data => buffer.push(data)) && buffer
+  stream[listener]
+    ? stream[listener].on('data', data => buffer.push(data)) && buffer
+    : buffer
 
 const clean = str => str.trim().replace(/\n$/, '')
 

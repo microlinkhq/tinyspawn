@@ -169,3 +169,9 @@ test('child process properties are available', async t => {
   t.is(result.exitCode, 0)
   ;['kill', 'ref', 'unref'].forEach(name => t.truthy(subprocess[name]))
 })
+
+test('handle stdout/stderr as inherit', async t => {
+  const { stdout, stderr } = await $('echo ""', { stdio: 'inherit' })
+  t.is(stdout, '')
+  t.is(stderr, '')
+})
