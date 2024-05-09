@@ -37,16 +37,16 @@ const extend = defaults => (input, args, options) => {
     const stdout = eos(childProcess, 'stdout')
     const stderr = eos(childProcess, 'stderr')
 
-    childProcess.on('error', reject).on('exit', code => {
+    childProcess.on('error', reject).on('exit', exitCode => {
       Object.defineProperty(childProcess, 'stdout', {
         get: parse(stdout, opts)
       })
       Object.defineProperty(childProcess, 'stderr', { get: parse(stderr) })
-      if (code === 0) return resolve(childProcess)
+      if (exitCode === 0) return resolve(childProcess)
       const command = `${cmd} ${cmdArgs.join(' ')}`
       let message = `The command spawned as:${EOL}${EOL}`
       message += `  ${command}${EOL}${EOL}`
-      message += `exited with \`{ code: ${code} }\` and the following trace:${EOL}${EOL}`
+      message += `exited with \`{ code: ${exitCode} }\` and the following trace:${EOL}${EOL}`
       message += String(stderr)
         .split(EOL)
         .map(line => `  ${line}`)
