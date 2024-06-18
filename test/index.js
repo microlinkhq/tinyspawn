@@ -1,5 +1,6 @@
 'use strict'
 
+const { setTimeout } = require('timers/promises')
 const { execSync } = require('child_process')
 const { Writable } = require('stream')
 const { EOL } = require('os')
@@ -21,6 +22,19 @@ test('meaningful errors', async t => {
   t.is(error.killed, false)
 })
 
+test.skip('control process lifecycle', async t => {
+  t.plan(2)
+  try {
+    const subprocess = $('sleep 100')
+    await setTimeout(500)
+    subprocess.kill('SIGKILL')
+    await subprocess
+  } catch (error) {
+    t.is(error.killed, true)
+    t.is(error.signalCode, 'SIGKILL')
+  }
+})
+
 test.serial('run a command', async t => {
   {
     const result = await $('echo hello world')
@@ -39,9 +53,7 @@ test.serial('run a command', async t => {
     t.is(result.spawnfile, SHELL)
     t.deepEqual(
       result.spawnargs,
-      isWindows
-        ? ['hello world', '/d', '/s', '/c', '"echo $0"']
-        : ['hello world', '-c', 'echo $0']
+      isWindows ? ['hello world', '/d', '/s', '/c', '"echo $0"'] : ['hello world', '-c', 'echo $0']
     )
   }
   {
@@ -61,9 +73,7 @@ test.serial('run a command', async t => {
     t.is(result.spawnfile, SHELL)
     t.deepEqual(
       result.spawnargs,
-      isWindows
-        ? ['world', '/d', '/s', '/c', '"echo hello $0"']
-        : ['world', '-c', 'echo hello $0']
+      isWindows ? ['world', '/d', '/s', '/c', '"echo hello $0"'] : ['world', '-c', 'echo hello $0']
     )
   }
 })
@@ -100,9 +110,7 @@ test('output is child_process', async t => {
 })
 
 test('$.json', async t => {
-  const { stdout } = await require('..').json(
-    'curl https://geolocation.microlink.io'
-  )
+  const { stdout } = await require('..').json('curl https://geolocation.microlink.io')
   t.true(!!stdout.ip.address)
 })
 
