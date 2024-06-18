@@ -3,16 +3,30 @@
 const { spawn } = require('child_process')
 const { EOL } = require('os')
 
-const EE_PROPS = Object.getOwnPropertyNames(
-  require('events').EventEmitter.prototype
-)
+const EE_PROPS = Object.getOwnPropertyNames(require('events').EventEmitter.prototype)
   .filter(name => !name.startsWith('_'))
   .concat(['kill', 'ref', 'unref'])
 
 const eos = (stream, listener, buffer = []) =>
-  stream[listener]
-    ? stream[listener].on('data', data => buffer.push(data)) && buffer
-    : buffer
+  stream[listener] ? stream[listener].on('data', data => buffer.push(data)) && buffer : buffer
+
+const createChildProcessError = ({ cmd, cmdArgs, exitCode, stderr, childProcess }) => {
+  const command = `${cmd} ${cmdArgs.join(' ')}`
+  let message = `The command spawned as:${EOL}${EOL}`
+  message += `  ${command}${EOL}${EOL}`
+  message += `exited with \`{ code: ${exitCode} }\` and the following trace:${EOL}${EOL}`
+  message += String(stderr)
+    .split(EOL)
+    .map(line => `  ${line}`)
+    .join(EOL)
+  const error = new Error(message)
+  error.command = command
+  error.name = 'ChildProcessError'
+  Object.keys(childProcess).forEach(key => {
+    error[key] = childProcess[key]
+  })
+  return error
+}
 
 const clean = str => str.trim().replace(/\n$/, '')
 
@@ -42,30 +56,15 @@ const extend = defaults => (input, args, options) => {
         get: parse(stdout, opts)
       })
       Object.defineProperty(childProcess, 'stderr', { get: parse(stderr) })
-      if (exitCode === 0) return resolve(childProcess)
-      const command = `${cmd} ${cmdArgs.join(' ')}`
-      let message = `The command spawned as:${EOL}${EOL}`
-      message += `  ${command}${EOL}${EOL}`
-      message += `exited with \`{ code: ${exitCode} }\` and the following trace:${EOL}${EOL}`
-      message += String(stderr)
-        .split(EOL)
-        .map(line => `  ${line}`)
-        .join(EOL)
-      const error = new Error(message)
-      error.command = command
-      error.name = 'ChildProcessError'
-      Object.keys(childProcess).forEach(key => {
-        error[key] = childProcess[key]
-      })
-      reject(error)
+      return exitCode === 0
+        ? resolve(childProcess)
+        : reject(createChildProcessError({ cmd, cmdArgs, exitCode, stderr, childProcess }))
     })
   })
 
   const subprocess = Object.assign(promise, childProcess)
   if (childProcess) {
-    EE_PROPS.forEach(
-      name => (subprocess[name] = childProcess[name].bind(childProcess))
-    )
+    EE_PROPS.forEach(name => (subprocess[name] = childProcess[name].bind(childProcess)))
   }
   return subprocess
 }
