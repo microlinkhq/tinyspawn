@@ -11,11 +11,12 @@
 
 **tinyspawn** is a minimalistic [child_process](https://nodejs.org/api/child_process.html) wrapper with following features:
 
-- Small (~50 LOC, 600 bytes).
+- Small (~80 LOC, 835 bytes).
 - Focus on performance.
 - Zero dependencies.
 - Meaningful errors.
 - Easy to extend.
+- Fully typed.
 
 ## Install
 
