@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.3.0 (2024-06-19)
+
+
+### Features
+
+* add TypeScript types ([#15](https://github.com/microlinkhq/tinyspawn/issues/15)) ([628e753](https://github.com/microlinkhq/tinyspawn/commit/628e7534f552b43c718beac8063f30abb37b565c))
+
 ### 1.2.14 (2024-06-18)
 
 ### 1.2.13 (2024-05-09)
