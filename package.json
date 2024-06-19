@@ -3,6 +3,7 @@
   "description": "tinyspawn is a minimalistic wrapper around child_process",
   "homepage": "https://github.com/microlinkhq/tinyspawn",
   "version": "1.2.14",
+  "types": "src/index.d.ts",
   "main": "src/index.js",
   "author": {
     "email": "hello@microlink.io",
@@ -56,7 +57,8 @@
     "simple-git-hooks": "latest",
     "standard": "latest",
     "standard-markdown": "latest",
-    "standard-version": "latest"
+    "standard-version": "latest",
+    "tsd": "latest"
   },
   "engines": {
     "node": ">= 18"
@@ -68,7 +70,7 @@
     "clean": "rm -rf node_modules",
     "contributors": "(npx git-authors-cli && npx finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
     "coverage": "c8 report --reporter=text-lcov > coverage/lcov.info",
-    "lint": "standard",
+    "lint": "standard && tsd",
     "postrelease": "npm run release:tags && npm run release:github && (ci-publish || npm publish --access=public)",
     "prerelease": "npm run update:check",
     "pretest": "npm run lint",
@@ -102,5 +104,8 @@
   "simple-git-hooks": {
     "commit-msg": "npx commitlint --edit",
     "pre-commit": "npx nano-staged"
+  },
+  "tsd": {
+    "directory": "test"
   }
 }

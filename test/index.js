@@ -1,6 +1,5 @@
 'use strict'
 
-const { setTimeout } = require('timers/promises')
 const { execSync } = require('child_process')
 const { Writable } = require('stream')
 const { EOL } = require('os')
@@ -20,19 +19,6 @@ test('meaningful errors', async t => {
   t.is(error.exitCode, 9)
   t.is(error.signalCode, null)
   t.is(error.killed, false)
-})
-
-test.skip('control process lifecycle', async t => {
-  t.plan(2)
-  try {
-    const subprocess = $('sleep 100')
-    await setTimeout(500)
-    subprocess.kill('SIGKILL')
-    await subprocess
-  } catch (error) {
-    t.is(error.killed, true)
-    t.is(error.signalCode, 'SIGKILL')
-  }
 })
 
 test.serial('run a command', async t => {
