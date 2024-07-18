@@ -124,37 +124,50 @@ When working with CLI programs and something wrong happens, it's crucial to pres
 **tinyspawn** prints meaningful errors to help you understa dn what happened:
 
 ```js
-const error = await $(`node -e 'require("notfound")'`).catch(error => error)
+const subprocess = $('node', ['child.js'], {
+  timeout: 500,
+  killSignal: 'SIGKILL'
+})
 
-console.error(error)
-// The command spawned as:
-//
-//   /Users/kikobeats/.n/bin/node -e 'require("notfound")'
-//
-// exited with `{ code: 1 }` and the following trace:
-//
-//   node:internal/modules/cjs/loader:1147
-//     throw err;
-//     ^
-//
-//   Error: Cannot find module 'notfound'
-//   Require stack:
-//   - /Users/kikobeats/Downloads/tinyspawn/[eval]
-//       at Module._resolveFilename (node:internal/modules/cjs/loader:1144:15)
-//       at Module._load (node:internal/modules/cjs/loader:985:27)
-//       at Module.require (node:internal/modules/cjs/loader:1235:19)
-//       at require (node:internal/modules/helpers:176:18)
-//       at [eval]:1:1
-//       at runScriptInThisContext (node:internal/vm:144:10)
-//       at node:internal/process/execution:109:14
-//       at [eval]-wrapper:6:24
-//       at runScript (node:internal/process/execution:92:62)
-//       at evalScript (node:internal/process/execution:123:10) {
-//     code: 'MODULE_NOT_FOUND',
-//     requireStack: [ '/Users/kikobeats/Downloads/tinyspawn/[eval]' ]
-//   }
+console.log(await subprocess.catch(error => error))
+// Error [ChildProcessError]: The command spawned as:
 
-//   Node.js v20.10.0
+//   `node child.js`
+
+// exited with:
+
+//   `{ signal: 'null', code: 1 }`
+
+// with the following trace:
+
+//     at createChildProcessError (/Users/kikobeats/Projects/microlink/tinyspawn/src/index.js:20:17)
+//     at ChildProcess.<anonymous> (/Users/kikobeats/Projects/microlink/tinyspawn/src/index.js:63:18)
+//     at ChildProcess.emit (node:events:531:35)
+//     at ChildProcess._handle.onexit (node:internal/child_process:294:12) {
+//   command: 'node child.js',
+//   connected: false,
+//   signalCode: null,
+//   exitCode: 1,
+//   killed: false,
+//   spawnfile: 'node',
+//   spawnargs: [ 'node', 'child.js' ],
+//   pid: 63467,
+//   stdout: '',
+//   stderr: 'node:internal/modules/cjs/loader:1148\n' +
+//     '  throw err;\n' +
+//     '  ^\n' +
+//     '\n' +
+//     "Error: Cannot find module '/Users/kikobeats/Projects/microlink/tinyspawn/child.js'\n" +
+//     '    at Module._resolveFilename (node:internal/modules/cjs/loader:1145:15)\n' +
+//     '    at Module._load (node:internal/modules/cjs/loader:986:27)\n' +
+//     '    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)\n' +
+//     '    at node:internal/main/run_main_module:28:49 {\n' +
+//     "  code: 'MODULE_NOT_FOUND',\n" +
+//     '  requireStack: []\n' +
+//     '}\n' +
+//     '\n' +
+//     'Node.js v20.15.1'
+// }
 ```
 
 The [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance properties are also available as part of the error:

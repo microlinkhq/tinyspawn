@@ -10,21 +10,23 @@ const EE_PROPS = Object.getOwnPropertyNames(require('events').EventEmitter.proto
 const eos = (stream, listener, buffer = []) =>
   stream[listener] ? stream[listener].on('data', data => buffer.push(data)) && buffer : buffer
 
-const createChildProcessError = ({ cmd, cmdArgs, exitCode, stderr, childProcess }) => {
+const createChildProcessError = ({ cmd, cmdArgs, childProcess }) => {
   const command = `${cmd} ${cmdArgs.join(' ')}`
   let message = `The command spawned as:${EOL}${EOL}`
-  message += `  ${command}${EOL}${EOL}`
-  message += `exited with \`{ code: ${exitCode} }\` and the following trace:${EOL}${EOL}`
-  message += String(stderr)
-    .split(EOL)
-    .map(line => `  ${line}`)
-    .join(EOL)
+  message += `  \`${command}\`${EOL}${EOL}`
+  message += `exited with:${EOL}${EOL}`
+  message += `  \`{ signal: '${childProcess.signalCode}', code: ${childProcess.exitCode} }\` ${EOL}${EOL}`
+  message += `with the following trace:${EOL}`
   const error = new Error(message)
   error.command = command
   error.name = 'ChildProcessError'
-  Object.keys(childProcess).forEach(key => {
-    error[key] = childProcess[key]
-  })
+
+  Object.keys(childProcess)
+    .filter(key => !key.startsWith('_') && !['stdio', 'stdin'].includes(key))
+    .forEach(key => {
+      error[key] = childProcess[key]
+    })
+
   return error
 }
 
@@ -58,7 +60,7 @@ const extend = defaults => (input, args, options) => {
       Object.defineProperty(childProcess, 'stderr', { get: parse(stderr) })
       return exitCode === 0
         ? resolve(childProcess)
-        : reject(createChildProcessError({ cmd, cmdArgs, exitCode, stderr, childProcess }))
+        : reject(createChildProcessError({ cmd, cmdArgs, childProcess }))
     })
   })
 
