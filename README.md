@@ -9,7 +9,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/microlinkhq/tinyspawn.svg?style=flat-square)](https://coveralls.io/github/microlinkhq/tinyspawn)
 [![NPM Status](https://img.shields.io/npm/dm/tinyspawn.svg?style=flat-square)](https://www.npmjs.org/package/tinyspawn)
 
-**tinyspawn** is a minimalistic [child_process](https://nodejs.org/api/child_process.html) wrapper with following features:
+**tinyspawn** is a minimalistic [`child_process`](https://nodejs.org/api/child_process.html) wrapper with following features:
 
 - Small (~80 LOC, 835 bytes).
 - Focus on performance.
