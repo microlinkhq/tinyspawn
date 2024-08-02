@@ -191,6 +191,10 @@ const {
 } = error
 ```
 
+## Related
+
+- [tinyrun](https://github.com/Kikobeats/tinyrun) – CLI for executing multiple commands in parallel with minimal footprint (~2KB).
+
 ## License
 
 **tinyspawn** © [microlink.io](https://microlink.io), released under the [MIT](https://github.com/microlinkhq/tinyspawn/blob/master/LICENSE.md) License.<br>
