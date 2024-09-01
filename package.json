@@ -75,7 +75,6 @@
     "coverage": "c8 report --reporter=text-lcov > coverage/lcov.info",
     "lint": "standard && tsd",
     "postrelease": "npm run release:tags && npm run release:github && (ci-publish || npm publish --access=public)",
-    "prerelease": "npm run update:check",
     "pretest": "npm run lint",
     "release": "standard-version -a",
     "release:github": "github-generate-release",
