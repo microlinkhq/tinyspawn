@@ -92,7 +92,6 @@ test('output is child_process', async t => {
   t.true(result.stdin !== undefined)
   t.true(result.stdout !== undefined)
   t.true(result.stderr !== undefined)
-  t.true(result.stdin !== undefined)
 })
 
 test('$.json', async t => {
