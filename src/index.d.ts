@@ -11,7 +11,7 @@ interface ResolvedSubprocess extends Omit<ChildProcess, 'stdout' | 'stderr'> {
 
 export interface SubprocessPromise extends Promise<ResolvedSubprocess>, ChildProcess {}
 
-declare function extend(defaults?: ExtendOptions): (input: string, args?: string[] | ExtendOptions, options?: ExtendOptions) => SubprocessPromise;
+declare function extend(defaults?: ExtendOptions): (input: string, args?: (string | false | null | undefined)[] | ExtendOptions, options?: ExtendOptions) => SubprocessPromise;
 
 declare const $: ReturnType<typeof extend> & {
   extend: typeof extend;
