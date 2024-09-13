@@ -87,7 +87,7 @@ or stdin:
 ```js
 const { Readable } = require('node:stream')
 
-const subprocess = $('cat', { stdin: 'hello world' })
+const subprocess = $('cat')
 Readable.from('hello world').pipe(subprocess.stdin)
 const {stdout} = await subprocess
 
