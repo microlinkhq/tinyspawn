@@ -55,16 +55,15 @@ When you execute a command, it returns a [ChildProcess](https://nodejs.org/api/c
 
 ```js
 const {
-  signalCode,
   exitCode,
   killed,
-  spawnfile,
-  spawnargs,
   pid,
+  signalCode,
+  spawnargs,
+  spawnfile,
+  stderr,
   stdin,
   stdout,
-  stderr,
-  stdin
 } = await $('date')
 ```
 
@@ -89,7 +88,7 @@ const { Readable } = require('node:stream')
 
 const subprocess = $('cat')
 Readable.from('hello world').pipe(subprocess.stdin)
-const {stdout} = await subprocess
+const { stdout } = await subprocess
 
 console.log(stdout) // 'hello world'
 ```
