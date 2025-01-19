@@ -186,7 +186,6 @@ const {
   stdin,
   stdout,
   stderr,
-  stdin
 } = error
 ```
 
