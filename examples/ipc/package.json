@@ -1,0 +1,8 @@
+{
+  "name": "@tinyspawn/process-message",
+  "private": true,
+  "devDependencies": {
+    "@mozilla/readability": "latest",
+    "happy-dom": "latest"
+  }
+}
