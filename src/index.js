@@ -58,9 +58,14 @@ const extend = defaults => (input, args, options) => {
         get: parse(stdout, opts)
       })
       Object.defineProperty(childProcess, 'stderr', { get: parse(stderr) })
-      return exitCode === 0
-        ? resolve(childProcess)
-        : reject(createChildProcessError({ cmd, cmdArgs, childProcess }))
+      if (exitCode !== 0) {
+        const error = createChildProcessError({ cmd, cmdArgs, childProcess })
+        if (opts.reject !== false) {
+          return reject(error)
+        }
+        childProcess.error = error
+      }
+      return resolve(childProcess)
     })
   })
 
