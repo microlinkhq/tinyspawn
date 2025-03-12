@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.4.0 (2025-03-12)
+
+
+### Features
+
+* add `reject` option ([#19](https://github.com/microlinkhq/tinyspawn/issues/19)) ([cc57e45](https://github.com/microlinkhq/tinyspawn/commit/cc57e45730ac43b2b4ea5bab27c593980ff22394))
+
 ### 1.3.3 (2024-09-01)
 
 ### 1.3.2 (2024-07-18)
