@@ -168,3 +168,17 @@ test('handle stdout/stderr as inherit', async t => {
   t.is(stdout, '')
   t.is(stderr, '')
 })
+
+test('resolve even if exit code is not 0 if reject=false', async t => {
+  const result = await $('exit 1', { reject: false })
+  t.is(result.exitCode, 1)
+  t.is(result.error instanceof Error, true)
+})
+
+test('resolve even if killed if reject=false', async t => {
+  const subprocess = $('sleep 1', { reject: false })
+  subprocess.kill()
+  const result = await subprocess
+  t.is(result.signalCode, 'SIGTERM')
+  t.is(result.error instanceof Error, true)
+})
