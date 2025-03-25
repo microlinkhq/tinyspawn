@@ -18,7 +18,7 @@ export interface TinyspawnPromise<Stdout = string>
 
 export type {
   /** @deprecated Use `TinyspawnPromise` instead. */
-  TinyspawnPromise as SubprocessPromise,
+  TinyspawnPromise as SubprocessPromise
 }
 
 type Tinyspawn<StdoutDefault> = [StdoutDefault] extends [string]
@@ -26,30 +26,30 @@ type Tinyspawn<StdoutDefault> = [StdoutDefault] extends [string]
       (
         input: string,
         args?: (string | false | null | undefined)[],
-        options?: TinyspawnOptions & { json?: false | undefined },
+        options?: TinyspawnOptions & { json?: false | undefined }
       ): TinyspawnPromise<string>
 
       (
         input: string,
-        options?: TinyspawnOptions & { json?: false | undefined },
+        options?: TinyspawnOptions & { json?: false | undefined }
       ): TinyspawnPromise<string>
 
       <Stdout = unknown>(
         input: string,
         args: (string | false | null | undefined)[] | undefined,
-        options: TinyspawnOptions & { json: boolean },
+        options: TinyspawnOptions & { json: boolean }
       ): TinyspawnPromise<Stdout>
 
       <Stdout = unknown>(
         input: string,
-        options: TinyspawnOptions & { json: boolean },
+        options: TinyspawnOptions & { json: boolean }
       ): TinyspawnPromise<Stdout>
     }
   : {
       (
         input: string,
         args: (string | false | null | undefined)[] | undefined,
-        options: TinyspawnOptions & { json: false },
+        options: TinyspawnOptions & { json: false }
       ): TinyspawnPromise<string>
 
       (input: string, options: TinyspawnOptions & { json: false }): TinyspawnPromise<string>
@@ -57,7 +57,7 @@ type Tinyspawn<StdoutDefault> = [StdoutDefault] extends [string]
       <Stdout = StdoutDefault>(
         input: string,
         args?: (string | false | null | undefined)[] | TinyspawnOptions,
-        options?: TinyspawnOptions,
+        options?: TinyspawnOptions
       ): TinyspawnPromise<Stdout>
     }
 
