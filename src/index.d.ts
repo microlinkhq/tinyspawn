@@ -1,24 +1,70 @@
-import { ChildProcess, SpawnOptions } from 'child_process';
+import { ChildProcess, SpawnOptions } from 'child_process'
 
-interface ExtendOptions extends SpawnOptions {
-  json?: boolean;
-  reject?: boolean;
+export interface TinyspawnOptions extends SpawnOptions {
+  json?: boolean
+  reject?: boolean
 }
 
-interface ResolvedSubprocess extends Omit<ChildProcess, 'stdout' | 'stderr'> {
-  stdout: string;
-  stderr: string;
+export interface TinyspawnResult<Stdout = string> extends Omit<ChildProcess, 'stdout' | 'stderr'> {
+  stdout: Stdout
+  stderr: string
   /** Only exists if `reject` was false and the child process exited with a non-zero code. */
-  error?: Error;
+  error?: Error
 }
 
-export interface SubprocessPromise extends Promise<ResolvedSubprocess>, ChildProcess {}
+export interface TinyspawnPromise<Stdout = string>
+  extends Promise<TinyspawnResult<Stdout>>,
+    ChildProcess {}
 
-declare function extend(defaults?: ExtendOptions): (input: string, args?: (string | false | null | undefined)[] | ExtendOptions, options?: ExtendOptions) => SubprocessPromise;
+export type {
+  /** @deprecated Use `TinyspawnPromise` instead. */
+  TinyspawnPromise as SubprocessPromise
+}
 
-declare const $: ReturnType<typeof extend> & {
-  extend: typeof extend;
-  json: ReturnType<typeof extend>;
-};
+type Tinyspawn<StdoutDefault> = [StdoutDefault] extends [string]
+  ? {
+      (
+        input: string,
+        args?: (string | false | null | undefined)[],
+        options?: TinyspawnOptions & { json?: false | undefined }
+      ): TinyspawnPromise<string>
 
-export default $;
+      (
+        input: string,
+        options?: TinyspawnOptions & { json?: false | undefined }
+      ): TinyspawnPromise<string>
+
+      <Stdout = unknown>(
+        input: string,
+        args: (string | false | null | undefined)[] | undefined,
+        options: TinyspawnOptions & { json: boolean }
+      ): TinyspawnPromise<Stdout>
+
+      <Stdout = unknown>(
+        input: string,
+        options: TinyspawnOptions & { json: boolean }
+      ): TinyspawnPromise<Stdout>
+    }
+  : {
+      (
+        input: string,
+        args: (string | false | null | undefined)[] | undefined,
+        options: TinyspawnOptions & { json: false }
+      ): TinyspawnPromise<string>
+
+      (input: string, options: TinyspawnOptions & { json: false }): TinyspawnPromise<string>
+
+      <Stdout = StdoutDefault>(
+        input: string,
+        args?: (string | false | null | undefined)[] | TinyspawnOptions,
+        options?: TinyspawnOptions
+      ): TinyspawnPromise<Stdout>
+    }
+
+declare const $: Tinyspawn<string> & {
+  extend(defaults?: TinyspawnOptions & { json?: false | undefined }): Tinyspawn<string>
+  extend(defaults: TinyspawnOptions & { json: boolean }): Tinyspawn<unknown>
+  json: Tinyspawn<unknown>
+}
+
+export default $

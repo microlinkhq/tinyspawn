@@ -1,3 +1,4 @@
+import { expectType } from 'tsd'
 import $ from '..'
 
 /* basic */
@@ -27,3 +28,26 @@ console.log(result.stdin)
 console.log(result.stdout)
 console.log(result.stderr)
 console.log(result.stdin)
+
+/* json */
+
+const json = await $.json('curl https://geolocation.microlink.io')
+expectType<unknown>(json.stdout)
+
+type Geolocation = {
+  ip: {
+    address: string
+  }
+}
+
+// Explicit type
+const json2 = await $.json<Geolocation>('curl https://geolocation.microlink.io')
+expectType<Geolocation>(json2.stdout)
+
+// Override json=true option
+const json3 = await $.json('curl https://geolocation.microlink.io', { json: false })
+expectType<string>(json3.stdout)
+
+// When json option might be true or false
+const json4 = await $('curl https://geolocation.microlink.io', { json: {} as boolean })
+expectType<unknown>(json4.stdout)
