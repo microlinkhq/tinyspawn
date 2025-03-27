@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.5.0 (2025-03-27)
+
+
+### Features
+
+* **types:** respect `json` option in return type ([#20](https://github.com/microlinkhq/tinyspawn/issues/20)) ([44a1dc6](https://github.com/microlinkhq/tinyspawn/commit/44a1dc693d821adfb915d5e3c19bb826a37d599a))
+
 ## 1.4.0 (2025-03-12)
 
 
