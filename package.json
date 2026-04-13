@@ -101,7 +101,9 @@
     ]
   },
   "pnpm": {
-    "neverBuiltDependencies": []
+    "onlyBuiltDependencies": [
+      "*"
+    ]
   },
   "simple-git-hooks": {
     "commit-msg": "npx commitlint --edit",
