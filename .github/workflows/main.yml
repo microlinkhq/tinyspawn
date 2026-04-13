@@ -49,9 +49,7 @@ jobs:
         with:
           version: latest
       - name: Install
-        run: pnpm install
-        env:
-          SKIP_INSTALL_SIMPLE_GIT_HOOKS: true
+        run: pnpm install --ignore-scripts
       - name: Test
         run: pnpm test
       - name: Report
