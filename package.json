@@ -49,7 +49,7 @@
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
-    "@ksmithut/prettier-standard": "latest",
+    "@types/node": "latest",
     "ava": "latest",
     "c8": "latest",
     "ci-publish": "latest",
@@ -64,7 +64,7 @@
     "tsd": "latest"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 20"
   },
   "files": [
     "src"
@@ -94,7 +94,7 @@
   },
   "nano-staged": {
     "*.js": [
-      "prettier-standard",
+      "npx -y @ksmithut/prettier-standard",
       "standard --fix"
     ],
     "package.json": [
