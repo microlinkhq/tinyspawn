@@ -49,7 +49,7 @@ jobs:
         with:
           version: latest
       - name: Install
-        run: pnpm install
+        run: pnpm install --ignore-scripts
       - name: Test
         run: pnpm test
       - name: Report

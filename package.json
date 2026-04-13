@@ -94,7 +94,6 @@
   },
   "nano-staged": {
     "*.js": [
-      "npx -y @ksmithut/prettier-standard",
       "standard --fix"
     ],
     "package.json": [
