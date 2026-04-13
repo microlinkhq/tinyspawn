@@ -49,7 +49,7 @@
   "devDependencies": {
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
-    "@kikobeats/prettier-standard": "0.2.3",
+    "@kikobeats/prettier-standard": "0.2.4",
     "@types/node": "latest",
     "ava": "latest",
     "c8": "latest",
