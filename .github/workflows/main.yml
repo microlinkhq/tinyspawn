@@ -50,6 +50,8 @@ jobs:
           version: latest
       - name: Install
         run: pnpm install
+        env:
+          SKIP_INSTALL_SIMPLE_GIT_HOOKS: true
       - name: Test
         run: pnpm test
       - name: Report
