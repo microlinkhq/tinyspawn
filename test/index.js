@@ -3,7 +3,7 @@
 const { execSync } = require('child_process')
 const { Writable } = require('stream')
 const { EOL } = require('os')
-const test = require('ava')
+const test = require('ava').default
 
 const isWindows = require('os').platform() === 'win32'
 
@@ -62,6 +62,22 @@ test.serial('run a command', async t => {
       isWindows ? ['world', '/d', '/s', '/c', '"echo hello $0"'] : ['world', '-c', 'echo hello $0']
     )
   }
+})
+
+// A non-shell instance so `spawnargs` reflects the real argument vector.
+const $bare = require('..')
+
+// Prints the arguments node received after `-e <script>`, one per line.
+const PRINT_ARGV = 'process.argv.slice(1).forEach(arg => console.log(arg))'
+
+test('array form keeps each value as a single opaque argument', async t => {
+  // Argument injection regression: a value containing a space must NOT become
+  // two separate arguments. This is the reporter's PoC, expressed with `node`
+  // (available on every CI platform) instead of `cat`.
+  const evil = 'a.txt b.txt'
+  const result = await $bare('node', ['-e', PRINT_ARGV, evil])
+  t.deepEqual(result.spawnargs, ['node', '-e', PRINT_ARGV, 'a.txt b.txt'])
+  t.is(result.stdout, 'a.txt b.txt')
 })
 
 test.serial('last break line is removed', async t => {

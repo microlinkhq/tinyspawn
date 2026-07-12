@@ -51,3 +51,9 @@ expectType<string>(json3.stdout)
 // When json option might be true or false
 const json4 = await $('curl https://geolocation.microlink.io', { json: {} as boolean })
 expectType<unknown>(json4.stdout)
+
+/* array form for dynamic values */
+
+const file = 'a.txt b.txt'
+const arrayForm = await $('cat', [file])
+expectType<string>(arrayForm.stdout)
