@@ -23,12 +23,6 @@ export type {
 
 type Tinyspawn<StdoutDefault> = [StdoutDefault] extends [string]
   ? {
-      /**
-       * Tagged template form: every interpolated value is passed as a single,
-       * opaque argument, so untrusted values cannot inject extra arguments.
-       */
-      (strings: TemplateStringsArray, ...values: unknown[]): TinyspawnPromise<string>
-
       (
         input: string,
         args?: (string | false | null | undefined)[],
@@ -52,15 +46,6 @@ type Tinyspawn<StdoutDefault> = [StdoutDefault] extends [string]
       ): TinyspawnPromise<Stdout>
     }
   : {
-      /**
-       * Tagged template form: every interpolated value is passed as a single,
-       * opaque argument, so untrusted values cannot inject extra arguments.
-       */
-      <Stdout = StdoutDefault>(
-        strings: TemplateStringsArray,
-        ...values: unknown[]
-      ): TinyspawnPromise<Stdout>
-
       (
         input: string,
         args: (string | false | null | undefined)[] | undefined,

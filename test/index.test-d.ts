@@ -52,11 +52,8 @@ expectType<string>(json3.stdout)
 const json4 = await $('curl https://geolocation.microlink.io', { json: {} as boolean })
 expectType<unknown>(json4.stdout)
 
-/* tagged template */
+/* array form for dynamic values */
 
 const file = 'a.txt b.txt'
-const tagged = await $`cat ${file}`
-expectType<string>(tagged.stdout)
-
-const taggedJson = await $.json<Geolocation>`curl ${'https://geolocation.microlink.io'}`
-expectType<Geolocation>(taggedJson.stdout)
+const arrayForm = await $('cat', [file])
+expectType<string>(arrayForm.stdout)

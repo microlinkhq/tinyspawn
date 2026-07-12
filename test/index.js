@@ -70,34 +70,14 @@ const $bare = require('..')
 // Prints the arguments node received after `-e <script>`, one per line.
 const PRINT_ARGV = 'process.argv.slice(1).forEach(arg => console.log(arg))'
 
-test('tagged template keeps interpolations as a single opaque argument', async t => {
+test('array form keeps each value as a single opaque argument', async t => {
   // Argument injection regression: a value containing a space must NOT become
   // two separate arguments. This is the reporter's PoC, expressed with `node`
   // (available on every CI platform) instead of `cat`.
   const evil = 'a.txt b.txt'
-  const result = await $bare`node -e ${PRINT_ARGV} ${evil}`
+  const result = await $bare('node', ['-e', PRINT_ARGV, evil])
   t.deepEqual(result.spawnargs, ['node', '-e', PRINT_ARGV, 'a.txt b.txt'])
   t.is(result.stdout, 'a.txt b.txt')
-})
-
-test('tagged template glues values to adjacent tokens', async t => {
-  const value = 'hello world'
-  const result = await $bare`node -e ${PRINT_ARGV} answer=${value}`
-  t.deepEqual(result.spawnargs, ['node', '-e', PRINT_ARGV, 'answer=hello world'])
-  t.is(result.stdout, 'answer=hello world')
-})
-
-test('tagged template spreads an array as separate opaque arguments', async t => {
-  const files = ['a b.txt', 'c d.txt']
-  const result = await $bare`node -e ${PRINT_ARGV} ${files}`
-  t.deepEqual(result.spawnargs, ['node', '-e', PRINT_ARGV, 'a b.txt', 'c d.txt'])
-  t.is(result.stdout, `a b.txt${EOL}c d.txt`)
-})
-
-test('tagged template ignores surrounding whitespace in static parts', async t => {
-  const result = await $bare`  node   -e   ${'console.log("ok")'}  `
-  t.deepEqual(result.spawnargs, ['node', '-e', 'console.log("ok")'])
-  t.is(result.stdout, 'ok')
 })
 
 test.serial('last break line is removed', async t => {

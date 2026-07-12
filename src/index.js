@@ -39,43 +39,12 @@ const parse =
       return json ? JSON.parse(data) : data
     }
 
-const isTemplate = value =>
-  Array.isArray(value) && Object.prototype.hasOwnProperty.call(value, 'raw')
-
-// Build the argument vector from a tagged template, keeping every interpolated
-// value as a single opaque argument. Whitespace only splits arguments when it
-// appears in the *static* parts of the template, never inside an interpolation.
-const templateArgs = (strings, values) => {
-  const args = []
-  let current = null
-
-  const close = () => {
-    if (current !== null) args.push(current)
-    current = null
+const extend = defaults => (input, args, options) => {
+  if (!(args instanceof Array)) {
+    options = args
+    args = []
   }
-
-  const appendText = text =>
-    text.split(/\s+/).forEach((segment, index) => {
-      if (index > 0) close()
-      if (segment !== '') current = (current ?? '') + segment
-    })
-
-  const appendValue = value =>
-    (Array.isArray(value) ? value : [value]).forEach((item, index) => {
-      if (index > 0) close()
-      current = (current ?? '') + String(item)
-    })
-
-  strings.forEach((string, index) => {
-    appendText(string)
-    if (index < values.length) appendValue(values[index])
-  })
-  close()
-
-  return args
-}
-
-const run = (defaults, cmd, cmdArgs, options) => {
+  const [cmd, ...cmdArgs] = input.split(' ').concat(args).filter(Boolean)
   let childProcess
 
   const promise = new Promise((resolve, reject) => {
@@ -104,22 +73,6 @@ const run = (defaults, cmd, cmdArgs, options) => {
   }
   return subprocess
 }
-
-const extend =
-  defaults =>
-    (input, ...rest) => {
-      if (isTemplate(input)) {
-        const [cmd, ...cmdArgs] = templateArgs(input, rest).filter(Boolean)
-        return run(defaults, cmd, cmdArgs)
-      }
-      let [args, options] = rest
-      if (!(args instanceof Array)) {
-        options = args
-        args = []
-      }
-      const [cmd, ...cmdArgs] = input.split(' ').concat(args).filter(Boolean)
-      return run(defaults, cmd, cmdArgs, options)
-    }
 
 const $ = extend()
 $.extend = extend
