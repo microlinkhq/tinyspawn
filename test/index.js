@@ -3,7 +3,7 @@
 const { execSync } = require('child_process')
 const { Writable } = require('stream')
 const { EOL } = require('os')
-const test = require('ava')
+const test = require('ava').default
 
 const isWindows = require('os').platform() === 'win32'
 
