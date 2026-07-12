@@ -51,6 +51,36 @@ const { stdout } = $(`node -e 'console.log("hello world")'`, {
 })
 ```
 
+### Passing dynamic values safely
+
+The string form above splits the command on whitespace, so any interpolated value that contains a space becomes **multiple** arguments:
+
+```js
+const file = 'a.txt b.txt'
+await $(`cat ${file}`) // spawns: cat "a.txt" "b.txt"  ⚠️ two arguments
+```
+
+When a value comes from an untrusted or dynamic source, this is [argument injection](https://cwe.mitre.org/data/definitions/88.html) (see [Security](#security)). Pass those values in one of the two forms that keep each value opaque.
+
+**Array form** — the second argument is an array of arguments, each passed verbatim:
+
+```js
+await $('cat', [file]) // spawns: cat "a.txt b.txt"  ✅ one argument
+```
+
+**Tagged template form** — every `${...}` interpolation is a single argument, never split:
+
+```js
+await $`cat ${file}` // spawns: cat "a.txt b.txt"  ✅ one argument
+```
+
+An array inside a template expands to one argument per item, so you can pass a list of values:
+
+```js
+const files = ['a.txt', 'b.txt']
+await $`cat ${files}` // spawns: cat "a.txt" "b.txt"
+```
+
 When you execute a command, it returns a [ChildProcess](https://nodejs.org/api/child_process.html#class-childprocess) instance:
 
 ```js
@@ -188,6 +218,19 @@ const {
   stderr,
 } = error
 ```
+
+## Security
+
+**tinyspawn** never spawns a shell by default, so shell metacharacters (`;`, `` ` ``, `$()`, `|`) are inert and classic shell injection is not possible.
+
+There is still one thing to keep in mind: the string form `$('cmd arg1 arg2')` splits on whitespace, so interpolating an untrusted value that contains a space turns it into several arguments. Depending on the wrapped binary, extra arguments can change behavior (read/write other files, follow redirects, run helper programs). This is [CWE-88: argument injection](https://cwe.mitre.org/data/definitions/88.html).
+
+The rule is simple:
+
+- Static commands you write yourself → any form is fine.
+- Any value from an untrusted or dynamic source → use the [array form](#passing-dynamic-values-safely) `$(cmd, [value])` or the [tagged template form](#passing-dynamic-values-safely) `` $`cmd ${value}` ``. Both keep each value as a single, opaque argument.
+
+Never interpolate untrusted input into the string form.
 
 ## Related
 
