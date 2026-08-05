@@ -1,6 +1,6 @@
 {
   "name": "tinyspawn",
-  "description": "tinyspawn is a minimalistic wrapper around child_process",
+  "description": "Minimal promise wrapper around child_process.spawn for running binaries and shell commands.",
   "homepage": "https://github.com/microlinkhq/tinyspawn",
   "version": "1.5.8",
   "types": "src/index.d.ts",
@@ -32,16 +32,13 @@
     "url": "https://github.com/microlinkhq/tinyspawn/issues"
   },
   "keywords": [
-    "bin",
-    "binaries",
     "binary",
-    "child",
+    "child-process",
+    "cli",
     "exec",
-    "execfile",
-    "execute",
-    "file",
     "fork",
     "process",
+    "promise",
     "shell",
     "spawn",
     "zx"
