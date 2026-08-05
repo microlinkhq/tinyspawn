@@ -2,7 +2,7 @@
   "name": "tinyspawn",
   "description": "Minimal promise wrapper around child_process.spawn for running binaries and shell commands.",
   "homepage": "https://github.com/microlinkhq/tinyspawn",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "types": "src/index.d.ts",
   "main": "src/index.js",
   "author": {
