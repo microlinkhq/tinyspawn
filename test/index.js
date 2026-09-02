@@ -81,7 +81,7 @@ test('array form keeps each value as a single opaque argument', async t => {
 })
 
 test('array form keeps empty-string arguments', async t => {
-  const result = await $bare('node', ['-e', PRINT_ARGV, '', 'x'])
+  const result = await $bare('node', ['-e', PRINT_ARGV, '', false, null, undefined, 'x'])
   t.deepEqual(result.spawnargs, ['node', '-e', PRINT_ARGV, '', 'x'])
 })
 
