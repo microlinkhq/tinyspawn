@@ -80,6 +80,14 @@ test('array form keeps each value as a single opaque argument', async t => {
   t.is(result.stdout, 'a.txt b.txt')
 })
 
+test('array form does not split the command string', async t => {
+  const subprocess = $bare('git commit', ['-m', 'msg'])
+  t.is(subprocess.spawnfile, 'git commit')
+  t.deepEqual(subprocess.spawnargs, ['git commit', '-m', 'msg'])
+  const error = await t.throwsAsync(subprocess)
+  t.is(error.code, 'ENOENT')
+})
+
 test('array form keeps a command path with spaces as one file', async t => {
   const { copyFileSync, mkdtempSync, rmSync, symlinkSync } = require('fs')
   const { tmpdir } = require('os')
