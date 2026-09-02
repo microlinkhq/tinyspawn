@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.5.10 (2026-09-02)
+
+
+### Bug Fixes
+
+* keep array-form command path intact ([#33](https://github.com/microlinkhq/tinyspawn/issues/33)) ([abd8419](https://github.com/microlinkhq/tinyspawn/commit/abd8419a82da53883857fe9a5a320e4270031f8f))
+
 ### 1.5.9 (2026-08-05)
 
 ### 1.5.8 (2026-08-03)
