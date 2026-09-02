@@ -80,6 +80,11 @@ test('array form keeps each value as a single opaque argument', async t => {
   t.is(result.stdout, 'a.txt b.txt')
 })
 
+test('array form keeps empty-string arguments', async t => {
+  const result = await $bare('node', ['-e', PRINT_ARGV, '', 'x'])
+  t.deepEqual(result.spawnargs, ['node', '-e', PRINT_ARGV, '', 'x'])
+})
+
 test('array form does not split the command string', async t => {
   const subprocess = $bare('git commit', ['-m', 'msg'])
   t.is(subprocess.spawnfile, 'git commit')

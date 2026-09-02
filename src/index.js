@@ -45,7 +45,7 @@ const extend = defaults => (input, args, options) => {
     options = args
     args = []
   }
-  const [cmd, ...cmdArgs] = (arrayForm ? [input, ...args] : input.split(' ')).filter(Boolean)
+  const [cmd, ...cmdArgs] = arrayForm ? [input, ...args] : input.split(' ').filter(Boolean)
   let childProcess
 
   const promise = new Promise((resolve, reject) => {
