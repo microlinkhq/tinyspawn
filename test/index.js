@@ -80,6 +80,25 @@ test('array form keeps each value as a single opaque argument', async t => {
   t.is(result.stdout, 'a.txt b.txt')
 })
 
+test('array form keeps a command path with spaces as one file', async t => {
+  const { copyFileSync, mkdtempSync, rmSync, symlinkSync } = require('fs')
+  const { tmpdir } = require('os')
+  const path = require('path')
+
+  const dir = mkdtempSync(path.join(tmpdir(), 'tiny spawn-'))
+  t.teardown(() => rmSync(dir, { recursive: true, force: true }))
+
+  const binary = path.join(dir, path.basename(process.execPath))
+  if (process.platform === 'win32') copyFileSync(process.execPath, binary)
+  else symlinkSync(process.execPath, binary)
+
+  const evil = 'a.txt b.txt'
+  const result = await $bare(binary, ['-e', PRINT_ARGV, evil])
+  t.is(result.spawnfile, binary)
+  t.deepEqual(result.spawnargs, [binary, '-e', PRINT_ARGV, evil])
+  t.is(result.stdout, evil)
+})
+
 test.serial('last break line is removed', async t => {
   {
     const { stdout } = await $('echo hello world')
