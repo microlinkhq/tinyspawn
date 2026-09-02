@@ -40,11 +40,14 @@ const parse =
     }
 
 const extend = defaults => (input, args, options) => {
-  if (!(args instanceof Array)) {
+  const arrayForm = args instanceof Array
+  if (!arrayForm) {
     options = args
     args = []
   }
-  const [cmd, ...cmdArgs] = input.split(' ').concat(args).filter(Boolean)
+  const [cmd, ...cmdArgs] = arrayForm
+    ? [input, ...args.filter(arg => arg != null && arg !== false)]
+    : input.split(' ').filter(Boolean)
   let childProcess
 
   const promise = new Promise((resolve, reject) => {
@@ -53,7 +56,7 @@ const extend = defaults => (input, args, options) => {
     const stdout = eos(childProcess, 'stdout')
     const stderr = eos(childProcess, 'stderr')
 
-    childProcess.on('error', reject).on('exit', exitCode => {
+    childProcess.on('error', reject).on('close', exitCode => {
       Object.defineProperty(childProcess, 'stdout', {
         get: parse(stdout, opts)
       })

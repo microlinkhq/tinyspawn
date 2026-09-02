@@ -60,10 +60,19 @@ const file = 'a.txt b.txt'
 await $(`cat ${file}`) // spawns: cat "a.txt" "b.txt"  ⚠️ two arguments
 ```
 
-When a value comes from an untrusted or dynamic source, this is [argument injection](https://cwe.mitre.org/data/definitions/88.html) (see [Security](#security)). Pass those values using the **array form**, where the second argument is an array of arguments and each item is passed verbatim, spaces and all:
+When a value comes from an untrusted or dynamic source, this is [argument injection](https://cwe.mitre.org/data/definitions/88.html) (see [Security](#security)). Pass those values using the **array form**, where the command and each argument are passed verbatim, spaces and all:
 
 ```js
 await $('cat', [file]) // spawns: cat "a.txt b.txt"  ✅ one argument
+await $('/path/with spaces/bin', [file]) // file path stays one argument
+```
+
+Pick one form. Do not put flags in the command string and also pass an argv array — the first argument is the file, not a mini-shell line:
+
+```js
+await $('git commit -m msg')              // string form: splits on spaces
+await $('git', ['commit', '-m', 'msg'])   // array form: one file, opaque args
+await $('git commit', ['-m', 'msg'])      // looks for a binary named "git commit"
 ```
 
 You can pass a list of values the same way:
@@ -220,7 +229,8 @@ There is still one thing to keep in mind: the string form `$('cmd arg1 arg2')` s
 The rule is simple:
 
 - Static commands you write yourself → the string form is fine.
-- Any value from an untrusted or dynamic source → use the [array form](#passing-dynamic-values-safely) `$(cmd, [value])`, which keeps each value as a single, opaque argument.
+- Any value from an untrusted or dynamic source → use the [array form](#passing-dynamic-values-safely) `$(cmd, [value])`, which keeps the command and each value as a single, opaque argument.
+- Do not mix them: `$('git commit', extras)` does not split `git commit`.
 
 Never interpolate untrusted input into the string form.
 
