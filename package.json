@@ -67,6 +67,7 @@
     "src"
   ],
   "scripts": {
+    "benchmark": "node benchmark/index.js",
     "clean": "rm -rf node_modules",
     "contributors": "(npx git-authors-cli && npx finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
     "coverage": "c8 report --reporter=text-lcov > coverage/lcov.info",
