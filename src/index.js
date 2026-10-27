@@ -40,6 +40,7 @@ const parse = (buffer, { json } = {}) => {
       const data = clean(Buffer.concat(buffer).toString())
       value = json ? JSON.parse(data) : data
       parsed = true
+      buffer.length = 0
     }
     return value
   }
