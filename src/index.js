@@ -32,12 +32,18 @@ const createChildProcessError = ({ cmd, cmdArgs, childProcess }) => {
 
 const clean = str => str.trim().replace(/\n$/, '')
 
-const parse =
-  (buffer, { json } = {}) =>
-    (encoding, start, end) => {
-      const data = clean(Buffer.concat(buffer).toString(encoding, start, end))
-      return json ? JSON.parse(data) : data
+const parse = (buffer, { json } = {}) => {
+  let parsed = false
+  let value
+  return () => {
+    if (!parsed) {
+      const data = clean(Buffer.concat(buffer).toString())
+      value = json ? JSON.parse(data) : data
+      parsed = true
     }
+    return value
+  }
+}
 
 const extend = defaults => (input, args, options) => {
   const arrayForm = args instanceof Array

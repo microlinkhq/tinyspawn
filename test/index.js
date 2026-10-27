@@ -147,6 +147,18 @@ test('$.json', async t => {
   t.true(!!stdout.ip.address)
 })
 
+test('$.json returns the same parsed stdout on every read', async t => {
+  const result = await require('..').json('node', ['-p', 'JSON.stringify({ a: 1 })'])
+  t.deepEqual(result.stdout, { a: 1 })
+  t.is(result.stdout, result.stdout)
+})
+
+test('stdout and stderr stay enumerable', async t => {
+  const result = await $('echo hello')
+  t.true(Object.keys(result).includes('stdout'))
+  t.true(Object.keys(result).includes('stderr'))
+})
+
 test('piping subprocess', async t => {
   const stream = new Writable({
     construct (callback) {
