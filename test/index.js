@@ -148,9 +148,96 @@ test('$.json', async t => {
 })
 
 test('$.json returns the same parsed stdout on every read', async t => {
-  const result = await require('..').json('node', ['-p', 'JSON.stringify({ a: 1 })'])
+  const result = await require('..').json('node', [
+    '-e',
+    'console.log(JSON.stringify({ a: 1 })); console.error("not-json")'
+  ])
   t.deepEqual(result.stdout, { a: 1 })
   t.is(result.stdout, result.stdout)
+  t.is(result.stderr, 'not-json')
+  t.is(result.stderr, 'not-json')
+})
+
+test('$.json caches falsy stdout', async t => {
+  for (const [expr, expected] of [
+    ['false', false],
+    ['0', 0],
+    ['null', null],
+    ['JSON.stringify("")', '']
+  ]) {
+    const result = await require('..').json('node', ['-e', `console.log(${expr})`])
+    t.is(result.stdout, expected)
+    t.is(result.stdout, expected)
+  }
+})
+
+test('$.json throws on every read of invalid stdout', async t => {
+  const result = await require('..').json('node', [
+    '-e',
+    'console.log("nope"); console.error("err-text")'
+  ])
+  const first = t.throws(() => result.stdout)
+  const second = t.throws(() => result.stdout)
+  t.is(first.name, 'SyntaxError')
+  t.not(first, second)
+  t.true(first.message.includes('nope'))
+  t.true(second.message.includes('nope'))
+  t.is(result.stderr, 'err-text')
+  t.is(result.stderr, 'err-text')
+})
+
+test('$.json rejects when invalid stdout exits non-zero', async t => {
+  const error = await t.throwsAsync(
+    require('..').json('node', ['-e', 'console.log("nope"); process.exit(1)'])
+  )
+  t.is(error.name, 'ChildProcessError')
+  t.is(error.exitCode, 1)
+  const first = t.throws(() => error.stdout)
+  const second = t.throws(() => error.stdout)
+  t.not(first, second)
+  t.true(first.message.includes('nope'))
+  t.true(second.message.includes('nope'))
+  t.is(error.stderr, '')
+  t.true(Object.keys(error).includes('stdout'))
+  t.true(Object.keys(error).includes('stderr'))
+})
+
+test('$.json with reject:false throws on every invalid stdout read', async t => {
+  const result = await require('..').json('node', ['-e', 'console.log("nope"); process.exit(1)'], {
+    reject: false
+  })
+  t.is(result.exitCode, 1)
+  t.true(result.error instanceof Error)
+  const first = t.throws(() => result.stdout)
+  const second = t.throws(() => result.error.stdout)
+  t.not(first, second)
+  t.true(first.message.includes('nope'))
+  t.true(second.message.includes('nope'))
+  t.is(result.stderr, '')
+  t.is(result.error.stderr, '')
+})
+
+test('stdout and stderr are decoded once', async t => {
+  const result = await $bare('node', ['-e', 'console.log("\\u00e9"); console.error("err")'])
+  t.is(result.stdout, '\u00e9')
+  t.is(result.stdout, '\u00e9')
+  t.is(result.stderr, 'err')
+  t.is(result.stderr, 'err')
+})
+
+test.serial('parsed stdout releases the raw output chunks', async t => {
+  const { setFlagsFromString } = require('v8')
+  const { runInNewContext } = require('vm')
+  setFlagsFromString('--expose-gc')
+  const collectGarbage = runInNewContext('gc')
+  const bytes = 8 * 1024 * 1024
+  const result = await $bare('node', ['-e', `process.stdout.write(Buffer.alloc(${bytes}, 97))`])
+  collectGarbage()
+  const before = process.memoryUsage().arrayBuffers
+  t.is(result.stdout.length, bytes)
+  collectGarbage()
+  const after = process.memoryUsage().arrayBuffers
+  t.true(before - after > bytes / 2)
 })
 
 test('stdout and stderr stay enumerable', async t => {
