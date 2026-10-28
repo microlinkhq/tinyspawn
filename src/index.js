@@ -21,10 +21,21 @@ const createChildProcessError = ({ cmd, cmdArgs, childProcess }) => {
   error.command = command
   error.name = 'ChildProcessError'
 
+  // Parsing $.json stdout can throw. Store the value when it succeeds so the
+  // error prints stderr. If it throws, keep the getter so close can reject.
   Object.keys(childProcess)
     .filter(key => !key.startsWith('_') && !['stdio', 'stdin'].includes(key))
     .forEach(key => {
-      error[key] = childProcess[key]
+      const descriptor = Object.getOwnPropertyDescriptor(childProcess, key)
+      if (!descriptor.get) {
+        error[key] = childProcess[key]
+        return
+      }
+      try {
+        error[key] = childProcess[key]
+      } catch {
+        Object.defineProperty(error, key, descriptor)
+      }
     })
 
   return error
@@ -32,12 +43,19 @@ const createChildProcessError = ({ cmd, cmdArgs, childProcess }) => {
 
 const clean = str => str.trim().replace(/\n$/, '')
 
-const parse =
-  (buffer, { json } = {}) =>
-    (encoding, start, end) => {
-      const data = clean(Buffer.concat(buffer).toString(encoding, start, end))
-      return json ? JSON.parse(data) : data
+const parse = (buffer, { json } = {}) => {
+  let parsed = false
+  let value
+  return () => {
+    if (!parsed) {
+      const data = clean(Buffer.concat(buffer).toString())
+      value = json ? JSON.parse(data) : data
+      parsed = true
+      buffer.length = 0
     }
+    return value
+  }
+}
 
 const extend = defaults => (input, args, options) => {
   const arrayForm = args instanceof Array

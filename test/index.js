@@ -16,6 +16,8 @@ test('meaningful errors', async t => {
   t.is(error.name, 'ChildProcessError')
   t.is(error.stderr, 'node: bad option: --foo')
   t.is(error.stdout, '')
+  t.is(Object.getOwnPropertyDescriptor(error, 'stderr').value, error.stderr)
+  t.is(Object.getOwnPropertyDescriptor(error, 'stdout').value, error.stdout)
   t.is(error.exitCode, 9)
   t.is(error.signalCode, null)
   t.is(error.killed, false)
@@ -145,6 +147,108 @@ test('output is child_process', async t => {
 test('$.json', async t => {
   const { stdout } = await require('..').json('curl https://geolocation.microlink.io')
   t.true(!!stdout.ip.address)
+})
+
+test('$.json returns the same parsed stdout on every read', async t => {
+  const result = await require('..').json('node', [
+    '-e',
+    'console.log(JSON.stringify({ a: 1 })); console.error("not-json")'
+  ])
+  t.deepEqual(result.stdout, { a: 1 })
+  t.is(result.stdout, result.stdout)
+  t.is(result.stderr, 'not-json')
+  t.is(result.stderr, 'not-json')
+})
+
+test('$.json caches falsy stdout', async t => {
+  for (const [expr, expected] of [
+    ['false', false],
+    ['0', 0],
+    ['null', null],
+    ['JSON.stringify("")', '']
+  ]) {
+    const result = await require('..').json('node', ['-e', `console.log(${expr})`])
+    t.is(result.stdout, expected)
+    t.is(result.stdout, expected)
+  }
+})
+
+test('$.json throws on every read of invalid stdout', async t => {
+  const result = await require('..').json('node', [
+    '-e',
+    'console.log("nope"); console.error("err-text")'
+  ])
+  const first = t.throws(() => result.stdout)
+  const second = t.throws(() => result.stdout)
+  t.is(first.name, 'SyntaxError')
+  t.not(first, second)
+  t.true(first.message.includes('nope'))
+  t.true(second.message.includes('nope'))
+  t.is(result.stderr, 'err-text')
+  t.is(result.stderr, 'err-text')
+})
+
+test('$.json rejects when invalid stdout exits non-zero', async t => {
+  const error = await t.throwsAsync(
+    require('..').json('node', ['-e', 'console.log("nope"); process.exit(1)'])
+  )
+  t.is(error.name, 'ChildProcessError')
+  t.is(error.exitCode, 1)
+  const first = t.throws(() => error.stdout)
+  const second = t.throws(() => error.stdout)
+  t.not(first, second)
+  t.true(first.message.includes('nope'))
+  t.true(second.message.includes('nope'))
+  t.is(error.stderr, '')
+  t.is(typeof Object.getOwnPropertyDescriptor(error, 'stdout').get, 'function')
+  t.is(Object.getOwnPropertyDescriptor(error, 'stderr').value, '')
+  t.true(Object.keys(error).includes('stdout'))
+  t.true(Object.keys(error).includes('stderr'))
+})
+
+test('$.json with reject:false throws on every invalid stdout read', async t => {
+  const result = await require('..').json('node', ['-e', 'console.log("nope"); process.exit(1)'], {
+    reject: false
+  })
+  t.is(result.exitCode, 1)
+  t.true(result.error instanceof Error)
+  const first = t.throws(() => result.stdout)
+  const second = t.throws(() => result.error.stdout)
+  t.not(first, second)
+  t.true(first.message.includes('nope'))
+  t.true(second.message.includes('nope'))
+  t.is(result.stderr, '')
+  t.is(result.error.stderr, '')
+})
+
+test('stdout and stderr are decoded once', async t => {
+  const result = await $bare('node', ['-e', 'console.log("\\u00e9"); console.error("err")'])
+  t.is(result.stdout, '\u00e9')
+  t.is(result.stdout, '\u00e9')
+  t.is(result.stderr, 'err')
+  t.is(result.stderr, 'err')
+})
+
+test.serial('parsed stdout releases the raw output chunks', async t => {
+  const result = await $bare('node', ['-e', 'process.stdout.write("hi")'])
+  const concat = Buffer.concat
+  let chunks
+  Buffer.concat = list => {
+    chunks = list
+    return concat(list)
+  }
+  try {
+    t.is(result.stdout, 'hi')
+    t.is(chunks.length, 0)
+  } finally {
+    Buffer.concat = concat
+  }
+})
+
+test('stdout and stderr stay enumerable', async t => {
+  const result = await $('echo hello')
+  t.true(Object.keys(result).includes('stdout'))
+  t.true(Object.keys(result).includes('stderr'))
 })
 
 test('piping subprocess', async t => {
