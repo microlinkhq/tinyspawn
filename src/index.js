@@ -21,16 +21,20 @@ const createChildProcessError = ({ cmd, cmdArgs, childProcess }) => {
   error.command = command
   error.name = 'ChildProcessError'
 
-  // stdout and stderr parse on read. Copy those getters without calling them
-  // so a JSON.parse failure rejects the promise instead of escaping close.
+  // Parsing $.json stdout can throw. Store the value when it succeeds so the
+  // error prints stderr. If it throws, keep the getter so close can reject.
   Object.keys(childProcess)
     .filter(key => !key.startsWith('_') && !['stdio', 'stdin'].includes(key))
     .forEach(key => {
       const descriptor = Object.getOwnPropertyDescriptor(childProcess, key)
-      if (descriptor.get) {
-        Object.defineProperty(error, key, descriptor)
-      } else {
+      if (!descriptor.get) {
         error[key] = childProcess[key]
+        return
+      }
+      try {
+        error[key] = childProcess[key]
+      } catch {
+        Object.defineProperty(error, key, descriptor)
       }
     })
 

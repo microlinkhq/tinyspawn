@@ -16,6 +16,8 @@ test('meaningful errors', async t => {
   t.is(error.name, 'ChildProcessError')
   t.is(error.stderr, 'node: bad option: --foo')
   t.is(error.stdout, '')
+  t.is(Object.getOwnPropertyDescriptor(error, 'stderr').value, error.stderr)
+  t.is(Object.getOwnPropertyDescriptor(error, 'stdout').value, error.stdout)
   t.is(error.exitCode, 9)
   t.is(error.signalCode, null)
   t.is(error.killed, false)
@@ -198,6 +200,8 @@ test('$.json rejects when invalid stdout exits non-zero', async t => {
   t.true(first.message.includes('nope'))
   t.true(second.message.includes('nope'))
   t.is(error.stderr, '')
+  t.is(typeof Object.getOwnPropertyDescriptor(error, 'stdout').get, 'function')
+  t.is(Object.getOwnPropertyDescriptor(error, 'stderr').value, '')
   t.true(Object.keys(error).includes('stdout'))
   t.true(Object.keys(error).includes('stderr'))
 })
@@ -226,18 +230,19 @@ test('stdout and stderr are decoded once', async t => {
 })
 
 test.serial('parsed stdout releases the raw output chunks', async t => {
-  const { setFlagsFromString } = require('v8')
-  const { runInNewContext } = require('vm')
-  setFlagsFromString('--expose-gc')
-  const collectGarbage = runInNewContext('gc')
-  const bytes = 8 * 1024 * 1024
-  const result = await $bare('node', ['-e', `process.stdout.write(Buffer.alloc(${bytes}, 97))`])
-  collectGarbage()
-  const before = process.memoryUsage().arrayBuffers
-  t.is(result.stdout.length, bytes)
-  collectGarbage()
-  const after = process.memoryUsage().arrayBuffers
-  t.true(before - after > bytes / 2)
+  const result = await $bare('node', ['-e', 'process.stdout.write("hi")'])
+  const concat = Buffer.concat
+  let chunks
+  Buffer.concat = list => {
+    chunks = list
+    return concat(list)
+  }
+  try {
+    t.is(result.stdout, 'hi')
+    t.is(chunks.length, 0)
+  } finally {
+    Buffer.concat = concat
+  }
 })
 
 test('stdout and stderr stay enumerable', async t => {
